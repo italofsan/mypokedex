@@ -1,19 +1,20 @@
-import React from 'react';
-import { 
+import React, { useState } from 'react';
+import {
   Button,
   Card,
   CardActionArea,
   CardActions,
   CardContent,
   CardMedia,
-  Typography
+  Typography,
 } from '@material-ui/core';
+import { withRouter, useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
   root: {
     minWidth: 345,
-    margin: 10
+    margin: 10,
   },
   cardContainer: {
     display: 'flex',
@@ -25,10 +26,11 @@ const useStyles = makeStyles({
   },
 });
 
-function PokemonList({ pokemon, pokemonUrl }) {
+function PokemonList({ pokemon }) {
+  const history = useHistory();
   const classes = useStyles();
 
-  
+  const [offset, setOffset] = useState(0);
 
   return (
     <div className={classes.cardContainer}>
@@ -36,25 +38,30 @@ function PokemonList({ pokemon, pokemonUrl }) {
         <Card className={classes.root}>
           <CardActionArea>
             <CardMedia
+              setOffset={setOffset}
               className={classes.media}
-              image={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${index+1}.png`}
+              image={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${offset}.png`}
               title={pokemon}
             />
             <CardContent>
-              <Typography gutterBottom variant="h5" component="h2">
+              <Typography gutterBottom variant='h5' component='h2'>
                 {pokemon}
               </Typography>
             </CardContent>
           </CardActionArea>
           <CardActions>
-            <Button size="small" color="primary">
+            <Button
+              size='small'
+              color='primary'
+              onClick={() => history.push(`/${pokemon}/Details`)}
+            >
               Mais informações
             </Button>
           </CardActions>
         </Card>
       ))}
     </div>
-  )
+  );
 }
 
-export default PokemonList;
+export default withRouter(PokemonList);
