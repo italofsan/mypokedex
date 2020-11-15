@@ -1,15 +1,15 @@
 import React from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
-import Initial from './pages/Initial';
+import Home from './pages/Home';
 import Details from './pages/Details';
 
 const Routes = () => {
   return (
     <BrowserRouter>
       <Switch>
-        <Route exact path='/' component={Initial} />
-        <Route exact path='/:pokemonName/details' component={Details} />
+        <Route exact path='/' component={Home} />
+        <Route exact path='/:pokemonName' component={Details} />
       </Switch>
     </BrowserRouter>
   );
