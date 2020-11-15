@@ -19,42 +19,24 @@ function PokemonList(props) {
   const classes = useStyles();
   
   
-  
-  const [pokemons, setPokemons] = useState();
-  // const [loading, setLoading] = useState(false);
-  
   const pokemonNames = props.pokemonName;
-  const [offset, setOffset] = useState(props.offset);
-  
-  // useEffect(()=>{
-
-  //   pokemonNames.map((pokemon) => {
-  //     const p = pokemon;
-  
-  //     const getPokemon = async (query) => {
-  //       // setLoading(true);
-  //       const response = await fetchPokemon(query);
-  //       const results = await response.json();
-  //       setPokemons(results);
-  //       // setLoading(false);
-  //     }
-  //     getPokemon(p);
-  //   })
-  // },[]);
-  // useEffect(() => {
-  //   const getName = () => {
-  //     getPokemon(pokemonNames)
-  //   }
-  //   getName();
-  // },[])
-
-  // const getPokemon = async (query) => {
-  //   const response = await fetchPokemon(query);
-  //   const results = await response.json();
-  //   setPokemons(results);
-  // }
-
+  const offset = props.offset;
  
+  const [pokemonsList, setPokemonsList] = useState([]);
+  
+  useEffect(()=>{
+    pokemonNames.map((pokemon) => {
+      const p = pokemon;
+  
+      const getPokemon = async (query) => {
+        const response = await fetchPokemon(query);
+        const results = await response.json();
+        setPokemonsList(pokemonsList.push(results));
+        console.log(pokemonsList);
+        }
+      getPokemon(p);
+    })
+  },[pokemonNames]);
 
   return (
     <div className={classes.cardContainer}>
@@ -70,16 +52,10 @@ function PokemonList(props) {
               </Typography>
             </CardContent>
             <CardMedia
-              // setOffset={setOffset}
               className={classes.media}
               image={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${i + offset}.png`}
               title={pokemon}
             />
-            {/* <CardContent>
-              <Typography gutterBottom variant='h5' component='h2' style={{textTransform: "capitalize"}}>
-                {pokemon}
-              </Typography>
-            </CardContent> */}
           </CardActionArea>
           <CardActions>
             <Button

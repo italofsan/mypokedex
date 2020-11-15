@@ -153,7 +153,7 @@ const Home = () => {
         ) : null} */}
 
         {loading2 ? (
-          'Loading...'
+          <h1>Loading...</h1>
           ) : (
             <div>
               <PokemonList pokemonName={pokemonName} getPokemon={getPokemon} offset={offset}/>
