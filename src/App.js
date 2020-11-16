@@ -1,6 +1,5 @@
 import { CssBaseline } from '@material-ui/core'
 import Routes from './routes';
-import './global.css';
 
 const App = () => {
 

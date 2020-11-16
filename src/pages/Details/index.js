@@ -6,12 +6,10 @@ import {
   CardMedia,
   Typography,
   Container,
-  LinearProgress
 } from '@material-ui/core';
 import { useLocation, useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-
-import PokemonSearch from '../../components/PokemonSearch';
+import pokemonType from './styles';
 
 const Details = (props) => {
   const classes = useStyles();
@@ -43,9 +41,7 @@ const Details = (props) => {
     
     try {
       const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemonName}/`);
-      
       setPokeTypes(response.data.types);
-      
       setPokemon({
         id: response.data.id,
         name: response.data.name,
@@ -54,14 +50,10 @@ const Details = (props) => {
         moves: response.data.moves,
         abilities: response.data.abilities
       });
-      setLoading(false);
-      // setPokemon(results);
-      
+      setLoading(false);      
     } catch (error) {
     console.log(error.message);
   }}
-  //   setLoading(false);
-  // }
 
 
   if (loading) {
@@ -108,11 +100,6 @@ const Details = (props) => {
             
 
             <div className={classes.contenteDiv}>
-              {/* <div className={classes.title}>
-                <Typography variant="h2" className={classes.titleText}>{pokemon.name}</Typography>
-                <Typography variant="h2" className={classes.titleId}>#{formatId(pokemon.id.toString())}</Typography>
-              </div> */}
-
               <div className={classes.section}>
                 <div className={classes.informations}>
                   <div className={classes.types}>
@@ -120,10 +107,10 @@ const Details = (props) => {
                       <Typography className={classes.sectionTitleText} variant="h5">Types</Typography>
                     </div>
 
-                    <div>
+                    <div className={classes.divType}>
                       {pokemon["types"].map((type, key)=>(
                         <div key={key}>
-                          <Typography className={classes.text}>{type.type.name}</Typography>
+                          <Typography className={classes.textType} style={{backgroundColor: pokemonType[type.type.name]}}>{type.type.name}</Typography>
                         </div>
                       ))}
                     </div>
@@ -207,6 +194,20 @@ const useStyles = makeStyles({
   },
   text:{
     textTransform: 'capitalize',
+  },
+  divType: {
+    display: 'flex',
+    flexDirection: 'row'
+  },
+  textType:{
+    textTransform: 'capitalize',
+    marginRight: 10,
+    marginBottom: 10,
+    padding: 5,
+    paddingLeft: 10,
+    paddingRight: 10,
+    textAlign: "center",
+    borderRadius: 10
   },
   title:{
     display: 'flex',

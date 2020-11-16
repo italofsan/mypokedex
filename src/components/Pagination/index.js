@@ -24,9 +24,10 @@ function Pagination({ goNextPage, goPrevPage }) {
 
 const useStyles = makeStyles({
   button:{
-    backgroundColor: '#FFF',
+    color: '#FFF',
+    backgroundColor: '#e84848',
     '&:hover': {
-      backgroundColor: 'rgba(255, 255, 255, 0.9)'
+      backgroundColor: 'rgba(232, 72, 72, 0.9)'
     }, 
     margin: 20
   }
