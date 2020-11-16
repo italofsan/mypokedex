@@ -1,37 +1,112 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import {
   Button,
   Card,
   CardMedia,
   Typography,
+  Container
 } from '@material-ui/core';
 import { useLocation, useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
+
+import PokemonSearch from '../../components/PokemonSearch';
 
 const Details = (props) => {
   const classes = useStyles();
   const history = useHistory();
   const location = useLocation();
 
-  const pokemonId = location.state.id;
-  const pokemonName = location.state.name;
-  const pokemonImage = location.state.image;
-  const pokemonTypes = location.state.types;
-  const pokemonAbilities = location.state.abilities;
-  const pokemonStats = location.state.stats;
-  const pokemonMoves = location.state.moves;
+  // const pokemonId = location.state.id;
+  const pokemonName = location.state.pokeName;
+  // const pokemonImage = location.state.image;
+  // const pokemonTypes = location.state.types;
+  // const pokemonAbilities = location.state.abilities;
+  // const pokemonStats = location.state.stats;
+  // const pokemonMoves = location.state.moves;
 
+  const [pokemon, setPokemon] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [pokeTypes, setPokeTypes] = useState();
   
+  
+  useEffect(()=>{
+    getPokemon();
+  },[pokemonName])
+
+  const formatId = (id) => {
+    if (id.length === 1) {
+      return "00" + id;
+    } else if (id.length === 2) {
+      return "0" + id;
+    } else {
+      return id;
+    }
+  }
+  
+  const getPokemon = async () => {
+    setLoading(true);
+    
+    try {
+      const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemonName}/`);
+      
+      setPokeTypes(response.data.types);
+      
+      setPokemon({
+        id: response.data.id,
+        name: response.data.name,
+        types: response.data.types,
+        stats: response.data.stats,
+        moves: response.data.moves,
+        abilities: response.data.abilities
+      });
+      setLoading(false);
+      // setPokemon(results);
+      
+    } catch (error) {
+    console.log(error.message);
+  }}
+  //   setLoading(false);
+  // }
+
+
+  if (loading) {
+    return (
+      <>
+      <div style={{ display: 'flex', justifyContent: 'center'}}>
+      <Container maxWidth="lg">
+        <div style={{ display: 'flex', justifyContent: 'center', margin: 20}}>
+          <h1 variant="h1" className={classes.title}>My Pokedex</h1>
+        </div>
+
+        
+
+        <div style={{display: 'flex', justifyContent: 'center'}}>
+          <PokemonSearch 
+            getPokemon={getPokemon} 
+            // getPokemonByType={getPokemonByType}
+          />
+        </div>
+        
+        
+        </Container>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
-      <div style={{ width: '50%' }}>
+
+      {pokeTypes && pokemon ? (
+        <>
+          <div style={{ width: '50%' }}>
         <Card className={classes.card}>
           <div>
             <CardMedia
               className={classes.media}
-              image={`https://assets.pokemon.com/assets/cms2/img/pokedex/full/${pokemonId}.png`}
-              title={pokemonName}
+              image={"https://assets.pokemon.com/assets/cms2/img/pokedex/full/" + formatId(pokemon.id.toString()) + ".png"}
+              title={pokemon.name}
             />
             <div className={classes.section}>
               <div className={classes.sectionTitle}>
@@ -39,7 +114,7 @@ const Details = (props) => {
               </div>
 
               <div>
-                {pokemonStats.map((stat, key)=>(
+                {pokemon["stats"].map((stat, key)=>(
                   <div key={key} style={{display: 'flex', flexDirection: 'row'}}>
                     <Typography className={classes.text}>{stat.stat.name}:</Typography>
                     <Typography className={classes.text} style={{marginLeft: 10}}>{stat.base_stat}</Typography>
@@ -53,8 +128,8 @@ const Details = (props) => {
 
       <div style={{display: 'flex', flexDirection: 'column', width: '50%'}}>
         <div className={classes.title}>
-          <Typography variant="h2" className={classes.titleText}>{pokemonName}</Typography>
-          <Typography variant="h2" className={classes.titleId}>#{pokemonId}</Typography>
+          <Typography variant="h2" className={classes.titleText}>{pokemon.name}</Typography>
+          <Typography variant="h2" className={classes.titleId}>#{pokemon.id}</Typography>
         </div>
 
         <div className={classes.section}>
@@ -65,7 +140,7 @@ const Details = (props) => {
               </div>
 
               <div>
-                {pokemonTypes.map((type, key)=>(
+                {pokemon["types"].map((type, key)=>(
                   <div key={key}>
                     <Typography className={classes.text}>{type.type.name}</Typography>
                   </div>
@@ -79,7 +154,7 @@ const Details = (props) => {
               </div>
 
               <div>
-                {pokemonAbilities.map((ability, key) => (
+                {pokemon["abilities"].map((ability, key) => (
                   <div key={key}>
                     <Typography className={classes.text}>{ability.ability.name}</Typography>
                   </div>
@@ -95,7 +170,7 @@ const Details = (props) => {
           </div>
 
           <div>
-            {pokemonStats.map((stat, key)=>(
+            {pokemon["stats"].map((stat, key)=>(
               <div key={key} style={{display: 'flex', flexDirection: 'row'}}>
                 <Typography className={classes.text}>{stat.stat.name}:</Typography>
                 <Typography className={classes.text} style={{marginLeft: 10}}>{stat.base_stat}</Typography>
@@ -110,7 +185,7 @@ const Details = (props) => {
           </div>
 
           <div>
-            {pokemonMoves.map((move, key)=>(
+            {pokemon["moves"].map((move, key)=>(
               <Typography variant="p" key={key} className={classes.text}>{move.move.name}, </Typography>
             ))}
           </div>
@@ -118,7 +193,8 @@ const Details = (props) => {
       </div>
 
       <Button className={classes.button} onClick={history.goBack}>Voltar</Button>
-    
+        </>
+      ) : (<div>Aguardando...</div>) }
     </>
   );
 };

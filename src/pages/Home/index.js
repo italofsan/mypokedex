@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import { withRouter, useHistory } from 'react-router-dom';
 
 import axios from 'axios';
 import Details from '../Details'
@@ -18,10 +19,8 @@ const Home = () => {
   const [pokemon, setPokemon] = useState();
   const [pokemonsByType, setPokemonsByType] = useState();
   
-
-  // const [pokemonAll, setPokemonAll] = useState();
   const [loading2, setLoading2] = useState(false);
-  const [pokemonName, setPokemonName] = useState([]);
+  const [pokemonListNames, setPokemonListNames] = useState([]);
   const [currentPageUrl, setCurrentPageUrl] = useState('https://pokeapi.co/api/v2/pokemon?offset=0&limit=20');
   const [nextPageUrl, setNextPageUrl] = useState();
   const [prevPageUrl, setPrevPageUrl] = useState();
@@ -29,20 +28,17 @@ const Home = () => {
 
   useEffect(() => {
     setLoading2(true);
-    let cancel;
-    axios
-      .get(currentPageUrl, {
-        cancelToken: new axios.CancelToken((c) => (cancel = c)),
-      })
-      .then((response) => {
-        setLoading2(false);
-        console.log(response.data);
-        setNextPageUrl(response.data.next);
-        setPrevPageUrl(response.data.previous);
-        setPokemonName(response.data.results.map((pokemon) => pokemon.name));
-      });
-    return () => cancel();
+    const fetchAllPokemon = async () => {
+       await axios.get(currentPageUrl)
+        .then((response) => {
+          setLoading2(false);
+          setNextPageUrl(response.data.next);
+          setPrevPageUrl(response.data.previous);
+          setPokemonListNames(response.data.results.map((pokemon) => pokemon.name));
+    })}
+    fetchAllPokemon();
   }, [currentPageUrl]);
+
 
   function goNextPage() {
     setCurrentPageUrl(nextPageUrl);
@@ -71,6 +67,16 @@ const Home = () => {
   //   setLoading1(false);
   //   console.log(pokemonsByType)
   // }
+  
+  const formatId = (id) => {
+    if (id.length === 1) {
+      return "00" + id;
+    } else if (id.length === 2) {
+      return "0" + id;
+    } else {
+      return id;
+    }
+  }
 
   if (loading) {
     return (
@@ -97,15 +103,6 @@ const Home = () => {
     );
   }
 
-  const formatId = (id) => {
-		if (id.length === 1) {
-			return "00" + id;
-		} else if (id.length === 2) {
-			return "0" + id;
-		} else {
-      return id;
-    }
-  }
 	
   return(
     <div style={{ display: 'flex', justifyContent: 'center'}}>
@@ -127,15 +124,17 @@ const Home = () => {
 
         <div style={{marginTop: 20, display: 'flex', justifyContent: 'center'}}>
           {!loading && pokemon ? (
-            <div style={{display: 'flex', justifyContent: "center"}}>            
+            
+            <div style={{display: 'flex', justifyContent: "center"}}>
+              {console.log(pokemon)}            
               <PokemonCard 
-                name={pokemon.name} 
-                id={() => formatId(pokemon.id.toString())} 
-                image={pokemon.sprites.other["official-artwork"].front_default}
-                types={pokemon.types}
-                stats={pokemon.stats}
-                abilities={pokemon.abilities}
-                moves={pokemon.moves}
+                pokeName={pokemon.name} 
+                pokeId={() => formatId(pokemon.id.toString())} 
+                pokeImage={pokemon.sprites.other["official-artwork"].front_default}
+                pokeTypes={pokemon.types}
+                pokeStats={pokemon.stats}
+                pokeAbilities={pokemon.abilities}
+                pokeMoves={pokemon.moves}
               />
             </div>
           ) : null}
@@ -156,7 +155,7 @@ const Home = () => {
           <h1>Loading...</h1>
           ) : (
             <div>
-              <PokemonList pokemonName={pokemonName} getPokemon={getPokemon} offset={offset}/>
+              <PokemonList pokemonListNames={pokemonListNames} getPokemon={getPokemon} offset={offset}/>
               <Pagination
                 goNextPage={nextPageUrl ? goNextPage : null}
                 goPrevPage={prevPageUrl ? goPrevPage : null}
@@ -175,4 +174,4 @@ const useStyles = makeStyles({
   }
 });
 
-export default Home;
+export default withRouter(Home);
