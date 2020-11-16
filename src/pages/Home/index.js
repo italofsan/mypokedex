@@ -14,14 +14,17 @@ import PokemonSearch from '../../components/PokemonSearch';
 import { fetchPokemon, fetchPokemonByType } from '../../services/api';
 
 const Home = () => {
-  const classes = useStyles(); 
+  const classes = useStyles();
   const [loading, setLoading] = useState(false);
   const [pokemon, setPokemon] = useState();
   const [pokemonsByType, setPokemonsByType] = useState();
-  
+  const [pokemonListNamesByType, setPokemonListNamesByType] = useState([]);
+
   const [loading2, setLoading2] = useState(false);
   const [pokemonListNames, setPokemonListNames] = useState([]);
-  const [currentPageUrl, setCurrentPageUrl] = useState('https://pokeapi.co/api/v2/pokemon?offset=0&limit=20');
+  const [currentPageUrl, setCurrentPageUrl] = useState(
+    'https://pokeapi.co/api/v2/pokemon?offset=0&limit=20'
+  );
   const [nextPageUrl, setNextPageUrl] = useState();
   const [prevPageUrl, setPrevPageUrl] = useState();
   const [offset, setOffset] = useState(1);
@@ -29,17 +32,18 @@ const Home = () => {
   useEffect(() => {
     setLoading2(true);
     const fetchAllPokemon = async () => {
-       await axios.get(currentPageUrl)
-        .then((response) => {
-          setLoading2(false);
-          setNextPageUrl(response.data.next);
-          setPrevPageUrl(response.data.previous);
-          setPokemonListNames(response.data.results.map((pokemon) => pokemon.name));
-    })}
+      await axios.get(currentPageUrl).then((response) => {
+        setLoading2(false);
+        setNextPageUrl(response.data.next);
+        setPrevPageUrl(response.data.previous);
+        setPokemonListNames(
+          response.data.results.map((pokemon) => pokemon.name)
+        );
+      });
+    };
     fetchAllPokemon();
-    renderList();
+    // renderList();
   }, [currentPageUrl]);
-
 
   function goNextPage() {
     setCurrentPageUrl(nextPageUrl);
@@ -51,37 +55,60 @@ const Home = () => {
     setOffset(offset - 20);
   }
 
-
   const getPokemon = async (query) => {
     setLoading(true);
     const response = await fetchPokemon(query);
     const results = await response.json();
     setPokemon(results);
     setLoading(false);
-  }
+  };
 
-  const renderList = () => {
+  // const getPokemonByType = async (query) => {
+  //   setLoading(true);
+  //   const response = await fetchPokemonByType(query);
+  //   const results = await response.json();
+  //   setPokemonsByType(results);
+  //   setLoading(false);
+  //   setPokemonListNamesByType(results.pokemon.map((pokemon) => pokemon.name));
+  //   console.log(pokemonsByType);
+  //   console.log(pokemonListNamesByType);
+  // };
 
-    return(
-      <div>
-        <PokemonList pokemonListNames={pokemonListNames} getPokemon={getPokemon} offset={offset}/>
-        <Pagination
-          goNextPage={nextPageUrl ? goNextPage : null}
-          goPrevPage={prevPageUrl ? goPrevPage : null}
-        />
-      </div>
-    )
-  }
-  
+  const fetchAllPokemonByType = async (type) => {
+    await axios
+      .get(`https://pokeapi.co/api/v2/type/${type}/`)
+      .then((response) => {
+        console.log(
+          response.data.pokemon.map((pokemon) => pokemon.pokemon.name)
+        );
+        setPokemonListNamesByType(
+          response.data.pokemon.map((pokemon) => pokemon.pokemon.name)
+        );
+      });
+    // console.log(pokemonListNamesByType);
+  };
+  // const renderList = () => {
+
+  //   return(
+  //     <div>
+  //       <PokemonList pokemonListNames={pokemonListNames} getPokemon={getPokemon} offset={offset}/>
+  //       <Pagination
+  //         goNextPage={nextPageUrl ? goNextPage : null}
+  //         goPrevPage={prevPageUrl ? goPrevPage : null}
+  //       />
+  //     </div>
+  //   )
+  // }
+
   const formatId = (id) => {
     if (id.length === 1) {
-      return "00" + id;
+      return '00' + id;
     } else if (id.length === 2) {
-      return "0" + id;
+      return '0' + id;
     } else {
       return id;
     }
-  }
+  };
 
   // if (loading) {
   //   return (
@@ -92,15 +119,13 @@ const Home = () => {
   //         <Typography variant="h1" className={classes.title}>My Pokedex</Typography>
   //       </div>
 
-        
-
   //       <div style={{display: 'flex', justifyContent: 'center'}}>
-  //         <PokemonSearch 
-  //           getPokemon={getPokemon} 
+  //         <PokemonSearch
+  //           getPokemon={getPokemon}
   //           // getPokemonByType={getPokemonByType}
   //         />
   //       </div>
-        
+
   //       <div style={{display: 'flex', justifyContent: 'center', alignItems:'center'}}>loading...</div>
   //       </Container>
   //       </div>
@@ -108,41 +133,43 @@ const Home = () => {
   //   );
   // }
 
-	
-  return(
-    <div >
-      <Container maxWidth="lg">
+  return (
+    <div>
+      <Container maxWidth='lg'>
         <div className={classes.divTitle}>
-          <Typography variant="h1" className={classes.title}>My Pokedex</Typography>
+          <Typography variant='h1' className={classes.title}>
+            My Pokedex
+          </Typography>
         </div>
 
         <div className={classes.divSearch}>
-          <PokemonSearch 
-            getPokemon={getPokemon} 
+          <PokemonSearch
+            getPokemon={getPokemon}
             // getPokemonByType={getPokemonByType}
+            fetchAllPokemonByType={fetchAllPokemonByType}
           />
-        </div>   
+        </div>
 
-        <div style={{marginTop: 20, display: 'flex', justifyContent: 'center'}}>
+        <div
+          style={{ marginTop: 20, display: 'flex', justifyContent: 'center' }}
+        >
           {!loading && pokemon ? (
-            
-            <div style={{display: 'flex', justifyContent: "center"}}>
-              {console.log(pokemon)}            
-              <PokemonCard 
-                pokeName={pokemon.name} 
-                pokeId={() => formatId(pokemon.id.toString())} 
-                pokeImage={pokemon.sprites.other["official-artwork"].front_default}
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              {console.log(pokemon)}
+              <PokemonCard
+                pokeName={pokemon.name}
+                pokeId={() => formatId(pokemon.id.toString())}
+                pokeImage={
+                  pokemon.sprites.other['official-artwork'].front_default
+                }
                 pokeTypes={pokemon.types}
                 pokeStats={pokemon.stats}
                 pokeAbilities={pokemon.abilities}
                 pokeMoves={pokemon.moves}
               />
             </div>
-            
           ) : null}
         </div>
-        
-
 
         {/* {!loading && pokemonsByType ? (
           pokemonsByType.pokemon.map((pokemon, index) => {
@@ -153,20 +180,21 @@ const Home = () => {
             )
         ) : null} */}
 
-
-        {loading2 ? (
-          null
-          ) : (
-            <div>
-              <PokemonList pokemonListNames={pokemonListNames} getPokemon={getPokemon} offset={offset}/>
-              <Pagination
-                goNextPage={nextPageUrl ? goNextPage : null}
-                goPrevPage={prevPageUrl ? goPrevPage : null}
-              />
-            </div>
+        {loading2 ? null : (
+          <div>
+            <PokemonList
+              pokemonListNames={pokemonListNames}
+              getPokemon={getPokemon}
+              offset={offset}
+            />
+            <Pagination
+              goNextPage={nextPageUrl ? goNextPage : null}
+              goPrevPage={prevPageUrl ? goPrevPage : null}
+            />
+          </div>
         )}
-        </Container> 
-    </div> 
+      </Container>
+    </div>
   );
 };
 
@@ -174,15 +202,15 @@ const useStyles = makeStyles({
   divTitle: {
     display: 'flex',
     justifyContent: 'center',
-    margin: 20
+    margin: 20,
   },
   divSearch: {
     display: 'flex',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   title: {
-    fontSize: 72
-  }
+    fontSize: 72,
+  },
 });
 
 export default withRouter(Home);
