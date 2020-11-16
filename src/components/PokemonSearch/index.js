@@ -25,7 +25,7 @@ const PokemonSearch = (props) => {
     <ThemeProvider theme={theme}>
     <div style={{display: 'flex', alignItems: "center", flexDirection: 'row'}}>
       <OutlinedInput
-        color='primary'
+        color='secondary'
         style={{ backgroundColor: '#FFF' }}
         placeholder="Search Pokemon by Name or Id"
         onChange={(e) => setPokemon(e.target.value)}
@@ -35,15 +35,13 @@ const PokemonSearch = (props) => {
         //   setPokemon(evento.target.value)
         // }}
         size="small"
-        // margin="normal"
-        // fullWidth
         InputLabelProps={{
           shrink: true,
         }}
         variant="outlined"
         endAdornment={
           <InputAdornment position="end">
-            <IconButton onClick={(e)=> props.getPokemon(pokemon)}>
+            <IconButton onClick={(e) => {props.getPokemon(pokemon)}}>
               <Search fontSize="small"/>
             </IconButton>
           </InputAdornment>}

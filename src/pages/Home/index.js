@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { withRouter, useHistory } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 import axios from 'axios';
-import Details from '../Details'
 
+import HeaderPokedex from '../../components/HeaderPokedex';
 import PokemonList from '../../components/List';
 import Pagination from '../../components/Pagination';
-import PokemonSearch from '../../components/PokemonSearch';
 import PokemonCard from '../../components/PokemonCard';
+import PokemonSearch from '../../components/PokemonSearch';
 
 import { fetchPokemon, fetchPokemonByType } from '../../services/api';
 
@@ -37,6 +37,7 @@ const Home = () => {
           setPokemonListNames(response.data.results.map((pokemon) => pokemon.name));
     })}
     fetchAllPokemon();
+    renderList();
   }, [currentPageUrl]);
 
 
@@ -59,14 +60,18 @@ const Home = () => {
     setLoading(false);
   }
 
-  // const getPokemonByType = async (query) => {
-  //   setLoading1(true);
-  //   const response = await fetchPokemonByType(query);
-  //   const results = await response.json();
-  //   setPokemonsByType(results.pokemon);
-  //   setLoading1(false);
-  //   console.log(pokemonsByType)
-  // }
+  const renderList = () => {
+
+    return(
+      <div>
+        <PokemonList pokemonListNames={pokemonListNames} getPokemon={getPokemon} offset={offset}/>
+        <Pagination
+          goNextPage={nextPageUrl ? goNextPage : null}
+          goPrevPage={prevPageUrl ? goPrevPage : null}
+        />
+      </div>
+    )
+  }
   
   const formatId = (id) => {
     if (id.length === 1) {
@@ -78,49 +83,45 @@ const Home = () => {
     }
   }
 
-  if (loading) {
-    return (
-      <>
-      <div style={{ display: 'flex', justifyContent: 'center'}}>
-      <Container maxWidth="lg">
-        <div style={{ display: 'flex', justifyContent: 'center', margin: 20}}>
-          <h1 variant="h1" className={classes.title}>My Pokedex</h1>
-        </div>
+  // if (loading) {
+  //   return (
+  //     <>
+  //     <div style={{ display: 'flex', justifyContent: 'center'}}>
+  //     <Container maxWidth="lg">
+  //       <div style={{ display: 'flex', justifyContent: 'center', margin: 20}}>
+  //         <Typography variant="h1" className={classes.title}>My Pokedex</Typography>
+  //       </div>
 
         
 
-        <div style={{display: 'flex', justifyContent: 'center'}}>
-          <PokemonSearch 
-            getPokemon={getPokemon} 
-            // getPokemonByType={getPokemonByType}
-          />
-        </div>
+  //       <div style={{display: 'flex', justifyContent: 'center'}}>
+  //         <PokemonSearch 
+  //           getPokemon={getPokemon} 
+  //           // getPokemonByType={getPokemonByType}
+  //         />
+  //       </div>
         
-        <div style={{display: 'flex', justifyContent: 'center', alignItems:'center'}}>loading...</div>
-        </Container>
-        </div>
-      </>
-    );
-  }
+  //       <div style={{display: 'flex', justifyContent: 'center', alignItems:'center'}}>loading...</div>
+  //       </Container>
+  //       </div>
+  //     </>
+  //   );
+  // }
 
 	
   return(
-    <div style={{ display: 'flex', justifyContent: 'center'}}>
+    <div >
       <Container maxWidth="lg">
-        <div style={{ display: 'flex', justifyContent: 'center', margin: 20}}>
-          <h1 variant="h1" className={classes.title}>My Pokedex</h1>
+        <div className={classes.divTitle}>
+          <Typography variant="h1" className={classes.title}>My Pokedex</Typography>
         </div>
 
-        
-
-        <div style={{display: 'flex', justifyContent: 'center'}}>
+        <div className={classes.divSearch}>
           <PokemonSearch 
             getPokemon={getPokemon} 
             // getPokemonByType={getPokemonByType}
           />
-        </div>
-
-        
+        </div>   
 
         <div style={{marginTop: 20, display: 'flex', justifyContent: 'center'}}>
           {!loading && pokemon ? (
@@ -137,6 +138,7 @@ const Home = () => {
                 pokeMoves={pokemon.moves}
               />
             </div>
+            
           ) : null}
         </div>
         
@@ -151,8 +153,9 @@ const Home = () => {
             )
         ) : null} */}
 
+
         {loading2 ? (
-          <h1>Loading...</h1>
+          null
           ) : (
             <div>
               <PokemonList pokemonListNames={pokemonListNames} getPokemon={getPokemon} offset={offset}/>
@@ -160,7 +163,7 @@ const Home = () => {
                 goNextPage={nextPageUrl ? goNextPage : null}
                 goPrevPage={prevPageUrl ? goPrevPage : null}
               />
-          </div>
+            </div>
         )}
         </Container> 
     </div> 
@@ -168,8 +171,16 @@ const Home = () => {
 };
 
 const useStyles = makeStyles({
+  divTitle: {
+    display: 'flex',
+    justifyContent: 'center',
+    margin: 20
+  },
+  divSearch: {
+    display: 'flex',
+    justifyContent: 'center'
+  },
   title: {
-    color: '#FFF',
     fontSize: 72
   }
 });
