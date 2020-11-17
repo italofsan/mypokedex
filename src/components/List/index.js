@@ -24,28 +24,19 @@ function PokemonList(props) {
   const pokemonListNames = props.pokemonListNames;
   const offset = props.offset;
  
-  const [pokemonsList, setPokemonsList] = useState([]);
-
-
-  const [pokeId, setPokeId] = useState();
-  const [pokeName, setPokeName] = useState();
-  const [pokeTypes, setPokeTypes] = useState();
-  const [pokeStats, setPokeStats] = useState();
-  const [pokeMoves, setPokeMoves] = useState();
-  const [pokeAbilities, setPokeAbilities] = useState();
-
-
-  
+  const [pokemonsList, setPokemonsList] = useState([""]);
+ 
   // useEffect(()=>{
   //   pokemonListNames.map((pokemon, index) => {
   
-  //     const getPokemon = async (query) => {
-  //       const response = await fetchPokemon(query);
+  //     const getPokemon = async (pokemon) => {
+  //       const response = await fetchPokemon(pokemon);
   //       const results = await response.json();
-  //       setPokemonsList(pokemonsList.push(results));
+  //       // setPokemonsList(pokemonsList.push(results));
+  //       setPokemonsList([...pokemonsList, results.name])
         
         
-  //       // console.log(pokemonsList[index].name);
+  //       // console.log(results.name);
   //       // console.log(pokemonsList[index].types);
   //       // console.log(pokemonsList[index].stats);
   //       // console.log(pokemonsList[index].moves);

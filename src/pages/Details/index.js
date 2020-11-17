@@ -58,7 +58,9 @@ const Details = (props) => {
 
   if (loading) {
     return (
-      <div>Carregando...</div>
+      <div className={classes.loading} style={{display: 'flex'}}>
+            <img src="https://camo.githubusercontent.com/9be29021cfdb21b2cc257a3efcb269f64d42f5b6/687474703a2f2f32352e6d656469612e74756d626c722e636f6d2f63393961353739646233616530666331363462663463636131343838383564332f74756d626c725f6d6a6776386b45754d67317338376e37396f315f3430302e676966" alt="Loading" />
+      </div>
     );
   }
 
@@ -150,7 +152,9 @@ const Details = (props) => {
               <Button className={classes.button} onClick={history.goBack}>Voltar</Button>
           </div>
         </Container>
-      ) : (<div>Aguardando...</div>) }
+      ) : (
+        null
+      ) }
     </>
   );
 };
@@ -241,6 +245,14 @@ const useStyles = makeStyles({
       backgroundColor: 'rgba(232, 72, 72, 0.9)'
     }, 
     margin: 10
+  },
+  loading: {
+    display: "flex", 
+    flexDirection: "row", 
+    justifyContent: "center", 
+    alignItems: "center", 
+    // marginTop: 50
+    height: '100vh'
   }
 });
 

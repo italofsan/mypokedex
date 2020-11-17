@@ -5,19 +5,17 @@ import { withRouter } from 'react-router-dom';
 
 import axios from 'axios';
 
-import HeaderPokedex from '../../components/HeaderPokedex';
 import PokemonList from '../../components/List';
 import Pagination from '../../components/Pagination';
 import PokemonCard from '../../components/PokemonCard';
 import PokemonSearch from '../../components/PokemonSearch';
 
-import { fetchPokemon, fetchPokemonByType } from '../../services/api';
+import { fetchPokemon } from '../../services/api';
 
 const Home = () => {
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
   const [pokemon, setPokemon] = useState();
-  const [pokemonsByType, setPokemonsByType] = useState();
   const [pokemonListNamesByType, setPokemonListNamesByType] = useState([]);
 
   const [loading2, setLoading2] = useState(false);
@@ -28,6 +26,10 @@ const Home = () => {
   const [nextPageUrl, setNextPageUrl] = useState();
   const [prevPageUrl, setPrevPageUrl] = useState();
   const [offset, setOffset] = useState(1);
+
+  const [visibleCard, setVisibleCard] = useState("flex");
+  const [visibleListAll, setVisibleListAll] = useState("flex");
+  const [visibleListType, setVisibleListType] = useState("flex");
 
   useEffect(() => {
     setLoading2(true);
@@ -42,7 +44,6 @@ const Home = () => {
       });
     };
     fetchAllPokemon();
-    // renderList();
   }, [currentPageUrl]);
 
   function goNextPage() {
@@ -56,6 +57,9 @@ const Home = () => {
   }
 
   const getPokemon = async (query) => {
+    setVisibleCard("flex");
+    setVisibleListAll("none");
+    setVisibleListType("none");
     setLoading(true);
     const response = await fetchPokemon(query);
     const results = await response.json();
@@ -63,43 +67,35 @@ const Home = () => {
     setLoading(false);
   };
 
-  // const getPokemonByType = async (query) => {
-  //   setLoading(true);
-  //   const response = await fetchPokemonByType(query);
-  //   const results = await response.json();
-  //   setPokemonsByType(results);
-  //   setLoading(false);
-  //   setPokemonListNamesByType(results.pokemon.map((pokemon) => pokemon.name));
-  //   console.log(pokemonsByType);
-  //   console.log(pokemonListNamesByType);
-  // };
+  const [test, setTest] = useState([]);
 
   const fetchAllPokemonByType = async (type) => {
+    setVisibleCard("none");
+    setVisibleListAll("none");
+    setVisibleListType("flex");
     await axios
       .get(`https://pokeapi.co/api/v2/type/${type}/`)
       .then((response) => {
-        console.log(
-          response.data.pokemon.map((pokemon) => pokemon.pokemon.name)
-        );
+        // console.log(
+        //   response.data.pokemon.map((pokemon) => pokemon.pokemon.name)
+        // );
         setPokemonListNamesByType(
           response.data.pokemon.map((pokemon) => pokemon.pokemon.name)
         );
+        // response.data.pokemon.map( async (pokemon) => {
+        //   await axios.get(pokemon.pokemon.url)
+        //   .then((response) => {
+        //     // console.log(response.data.name)
+        //     setTest([...test, response.data.name])
+        //   })
+        // })
+        
       });
     // console.log(pokemonListNamesByType);
+    // console.log(test);
   };
-  // const renderList = () => {
 
-  //   return(
-  //     <div>
-  //       <PokemonList pokemonListNames={pokemonListNames} getPokemon={getPokemon} offset={offset}/>
-  //       <Pagination
-  //         goNextPage={nextPageUrl ? goNextPage : null}
-  //         goPrevPage={prevPageUrl ? goPrevPage : null}
-  //       />
-  //     </div>
-  //   )
-  // }
-
+  // Função que formata o ID do Pokemon para um número de três algarismos
   const formatId = (id) => {
     if (id.length === 1) {
       return '00' + id;
@@ -110,28 +106,31 @@ const Home = () => {
     }
   };
 
-  // if (loading) {
-  //   return (
-  //     <>
-  //     <div style={{ display: 'flex', justifyContent: 'center'}}>
-  //     <Container maxWidth="lg">
-  //       <div style={{ display: 'flex', justifyContent: 'center', margin: 20}}>
-  //         <Typography variant="h1" className={classes.title}>My Pokedex</Typography>
-  //       </div>
+  // Mostrado quando está sendo realizada alguma requisição
+  if (loading) {
+    return (
+      <Container maxWidth='lg'>
+        <div className={classes.divTitle}>
+          <Typography variant='h1' className={classes.title}>
+            My Pokedex
+          </Typography>
+        </div>
 
-  //       <div style={{display: 'flex', justifyContent: 'center'}}>
-  //         <PokemonSearch
-  //           getPokemon={getPokemon}
-  //           // getPokemonByType={getPokemonByType}
-  //         />
-  //       </div>
-
-  //       <div style={{display: 'flex', justifyContent: 'center', alignItems:'center'}}>loading...</div>
-  //       </Container>
-  //       </div>
-  //     </>
-  //   );
-  // }
+        <div className={classes.divSearch}>
+          <PokemonSearch
+            getPokemon={getPokemon}
+            fetchAllPokemonByType={fetchAllPokemonByType}
+          />
+        </div>
+        
+        <div style={{ marginTop: 20, display: 'flex', justifyContent: 'center' }}>
+          <div className={classes.loading} style={{display: 'flex'}}>
+            <img src="https://camo.githubusercontent.com/9be29021cfdb21b2cc257a3efcb269f64d42f5b6/687474703a2f2f32352e6d656469612e74756d626c722e636f6d2f63393961353739646233616530666331363462663463636131343838383564332f74756d626c725f6d6a6776386b45754d67317338376e37396f315f3430302e676966" alt="Loading" />
+          </div>
+        </div>
+      </Container>
+    );
+  }
 
   return (
     <div>
@@ -145,16 +144,16 @@ const Home = () => {
         <div className={classes.divSearch}>
           <PokemonSearch
             getPokemon={getPokemon}
-            // getPokemonByType={getPokemonByType}
             fetchAllPokemonByType={fetchAllPokemonByType}
           />
         </div>
 
+        {/* Div que mostra Pokemon pesquisado por Nome ou ID */}
         <div
-          style={{ marginTop: 20, display: 'flex', justifyContent: 'center' }}
+          style={{ marginTop: 20, display: "flex", justifyContent: 'center' }}
         >
           {!loading && pokemon ? (
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <div style={{ display: `${visibleCard}`, justifyContent: 'center' }}>
               {console.log(pokemon)}
               <PokemonCard
                 pokeName={pokemon.name}
@@ -171,28 +170,38 @@ const Home = () => {
           ) : null}
         </div>
 
-        {/* {!loading && pokemonsByType ? (
-          pokemonsByType.pokemon.map((pokemon, index) => {
-            console.log(pokemonsByType.pokemon.pokemon["name"]);
-            // <PokemonCard key={index} name={pokemon.name} id={pokemon.id} image={pokemon.sprites.other["official-artwork"].front_default}/>
-          }
-            
-            )
-        ) : null} */}
-
-        {loading2 ? null : (
-          <div>
+        {/* Div que mostra Pokemons pesquisados por tipo */}
+        <div
+          style={{ marginTop: 20, display: 'flex', justifyContent: 'center', verticalAlign: 'middle' }}
+        >
+          {!loading && pokemonListNamesByType ? (
+            <div style={{ display: `${visibleListType}`, justifyContent: 'center' }}>
+            {/* {console.log(test)} */}
             <PokemonList
-              pokemonListNames={pokemonListNames}
+              pokemonListNames={pokemonListNamesByType}
               getPokemon={getPokemon}
               offset={offset}
             />
-            <Pagination
-              goNextPage={nextPageUrl ? goNextPage : null}
-              goPrevPage={prevPageUrl ? goPrevPage : null}
-            />
-          </div>
-        )}
+            </div>
+          ) : null}
+        </div>
+
+        {/* Div que mostra a lista de todos os Pokemons */}
+        <div  style={{ display: `${visibleListAll}`, justifyContent: 'center' }}>
+          {!loading2 ? (
+            <div> 
+              <PokemonList
+                pokemonListNames={pokemonListNames}
+                getPokemon={getPokemon}
+                offset={offset}
+              />
+              <Pagination
+                goNextPage={nextPageUrl ? goNextPage : null}
+                goPrevPage={prevPageUrl ? goPrevPage : null}
+              />
+            </div>
+          ) : null }
+        </div>
       </Container>
     </div>
   );
@@ -211,6 +220,13 @@ const useStyles = makeStyles({
   title: {
     fontSize: 72,
   },
+  loading: {
+    display: "flex", 
+    flexDirection: "row", 
+    justifyContent: "center", 
+    alignItems: "center", 
+    marginTop: 50,
+  }
 });
 
 export default withRouter(Home);
