@@ -69,8 +69,8 @@ const Details = (props) => {
       {pokeTypes && pokemon ? (
         <Container>
            <div className={classes.title}>
-                <Typography variant="h2" className={classes.titleText}>{pokemon.name}</Typography>
-                <Typography variant="h2" className={classes.titleId}>#{formatId(pokemon.id.toString())}</Typography>
+                <Typography variant="h1" className={classes.titleText}>{pokemon.name}</Typography>
+                <Typography variant="h1" className={classes.titleId}>#{formatId(pokemon.id.toString())}</Typography>
               </div>
           <div className={classes.mainDiv}>
             
@@ -84,14 +84,14 @@ const Details = (props) => {
                   />
                   <div className={classes.section}>
                     <div className={classes.sectionTitle}>
-                      <Typography className={classes.sectionTitleText} variant="h5" style={{marginLeft: 10}}>Stats</Typography>
+                      <Typography className={classes.sectionTitleText} variant="h3" style={{marginLeft: 10}}>Stats</Typography>
                     </div>
 
                     <div style={{marginBottom: 10}}>
                       {pokemon["stats"].map((stat, key)=>(
                         <div key={key} className={classes.statCard}>
-                          <Typography className={classes.text}>{stat.stat.name}:</Typography>
-                          <Typography className={classes.text} style={{marginLeft: 10}}>{stat.base_stat}</Typography>
+                          <Typography variant='h6' className={classes.text}>{stat.stat.name}:</Typography>
+                          <Typography variant='h6' className={classes.text} style={{marginLeft: 10}}>{stat.base_stat}</Typography>
                         </div>
                       ))}
                     </div>
@@ -106,13 +106,13 @@ const Details = (props) => {
                 <div className={classes.informations}>
                   <div className={classes.types}>
                     <div className={classes.sectionTitle}>
-                      <Typography className={classes.sectionTitleText} variant="h5">Types</Typography>
+                      <Typography className={classes.sectionTitleText} variant="h3">Types</Typography>
                     </div>
 
                     <div className={classes.divType}>
                       {pokemon["types"].map((type, key)=>(
                         <div key={key}>
-                          <Typography className={classes.textType} style={{backgroundColor: pokemonType[type.type.name]}}>{type.type.name}</Typography>
+                          <Typography variant='h6' className={classes.textType} style={{backgroundColor: pokemonType[type.type.name]}}>{type.type.name}</Typography>
                         </div>
                       ))}
                     </div>
@@ -120,13 +120,13 @@ const Details = (props) => {
 
                   <div className={classes.abilities}>
                     <div className={classes.sectionTitle}>
-                      <Typography className={classes.sectionTitleText} variant="h5">Abilities</Typography>
+                      <Typography className={classes.sectionTitleText} variant="h3">Abilities</Typography>
                     </div>
 
                     <div>
                       {pokemon["abilities"].map((ability, key) => (
                         <div key={key}>
-                          <Typography variant="p" className={classes.text}>{ability.ability.name}</Typography>
+                          <Typography variant='h6' className={classes.text}>{ability.ability.name}</Typography>
                         </div>
                       ))}
                     </div>
@@ -136,12 +136,12 @@ const Details = (props) => {
 
               <div className={classes.section}>
                 <div className={classes.sectionTitle}>
-                  <Typography className={classes.sectionTitleText} variant="h5">Moves</Typography>
+                  <Typography className={classes.sectionTitleText} variant="h3">Moves</Typography>
                 </div>
 
                 <div>
                   {pokemon["moves"].map((move, key)=>(
-                    <Typography variant="p" key={key} className={classes.text}>{move.move.name}, </Typography>
+                    <Typography variant="p" key={key} className={classes.text} style={{fontSize: 16}}>{move.move.name}, </Typography>
                   ))}
                 </div>
               </div>

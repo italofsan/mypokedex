@@ -9,13 +9,13 @@ function Pagination({ goNextPage, goPrevPage }) {
     <div style={{ display: 'flex', justifyContent: 'center' }}>
       {goPrevPage && (
         <Button onClick={goPrevPage} className={classes.button}>
-            Anterior
+            Previous
         </Button>
       )}
       
       {goNextPage && (
         <Button onClick={goNextPage} className={classes.button}>
-            Próxima
+            Next
         </Button>
       )}
     </div>

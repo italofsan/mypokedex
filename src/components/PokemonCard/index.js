@@ -43,10 +43,10 @@ const PokemonCard = (props) => {
           } 
         })}>
         <CardContent style={{display: "flex", justifyContent: 'space-between'}}> 
-          <Typography variant='h6' component='h2' style={{textTransform: "capitalize"}}>
+          <Typography variant='h5'style={{textTransform: "capitalize"}}>
             {pokeName}
           </Typography>
-          <Typography variant='h6' component='h2' style={{textTransform: "capitalize", color: '#CCC'}}>
+          <Typography variant='h5'style={{textTransform: "capitalize", color: '#CCC'}}>
             #{id}
           </Typography>
         </CardContent>
@@ -72,7 +72,7 @@ const PokemonCard = (props) => {
                 pokeMoves: pokeMoves
             } 
           })}>
-            More Informations
+            <Typography variant='p'>More Informations</Typography>
           </Button>
         </CardActions>
       </Card>

@@ -14,9 +14,11 @@ import { fetchPokemon } from '../../services/api';
 
 const Home = () => {
   const classes = useStyles();
+
   const [loading, setLoading] = useState(false);
   const [pokemon, setPokemon] = useState();
   const [pokemonListNamesByType, setPokemonListNamesByType] = useState([]);
+  const [pokemonListNamesByAbility, setPokemonListNamesByAbility] = useState([]);
 
   const [loading2, setLoading2] = useState(false);
   const [pokemonListNames, setPokemonListNames] = useState([]);
@@ -30,6 +32,7 @@ const Home = () => {
   const [visibleCard, setVisibleCard] = useState("flex");
   const [visibleListAll, setVisibleListAll] = useState("flex");
   const [visibleListType, setVisibleListType] = useState("flex");
+  const [visibleListAbility, setVisibleListAbility] = useState("flex");
 
   useEffect(() => {
     setLoading2(true);
@@ -60,6 +63,7 @@ const Home = () => {
     setVisibleCard("flex");
     setVisibleListAll("none");
     setVisibleListType("none");
+    setVisibleListAbility("none");
     setLoading(true);
     const response = await fetchPokemon(query);
     const results = await response.json();
@@ -73,6 +77,7 @@ const Home = () => {
     setVisibleCard("none");
     setVisibleListAll("none");
     setVisibleListType("flex");
+    setVisibleListAbility("none");
     await axios
       .get(`https://pokeapi.co/api/v2/type/${type}/`)
       .then((response) => {
@@ -80,6 +85,33 @@ const Home = () => {
         //   response.data.pokemon.map((pokemon) => pokemon.pokemon.name)
         // );
         setPokemonListNamesByType(
+          response.data.pokemon.map((pokemon) => pokemon.pokemon.name)
+        );
+        // response.data.pokemon.map( async (pokemon) => {
+        //   await axios.get(pokemon.pokemon.url)
+        //   .then((response) => {
+        //     // console.log(response.data.name)
+        //     setTest([...test, response.data.name])
+        //   })
+        // })
+        
+      });
+    // console.log(pokemonListNamesByType);
+    // console.log(test);
+  };
+
+  const fetchPokemonsByAbility = async (ability) => {
+    setVisibleCard("none");
+    setVisibleListAll("none");
+    setVisibleListType("none");
+    setVisibleListAbility("flex");
+    await axios
+      .get(`https://pokeapi.co/api/v2/ability/${ability}/`)
+      .then((response) => {
+        // console.log(
+        //   response.data.pokemon.map((pokemon) => pokemon.pokemon.name)
+        // );
+        setPokemonListNamesByAbility(
           response.data.pokemon.map((pokemon) => pokemon.pokemon.name)
         );
         // response.data.pokemon.map( async (pokemon) => {
@@ -120,10 +152,11 @@ const Home = () => {
           <PokemonSearch
             getPokemon={getPokemon}
             fetchAllPokemonByType={fetchAllPokemonByType}
+            fetchPokemonsByAbility={fetchPokemonsByAbility}
           />
         </div>
         
-        <div style={{ marginTop: 20, display: 'flex', justifyContent: 'center' }}>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
           <div className={classes.loading} style={{display: 'flex'}}>
             <img src="https://camo.githubusercontent.com/9be29021cfdb21b2cc257a3efcb269f64d42f5b6/687474703a2f2f32352e6d656469612e74756d626c722e636f6d2f63393961353739646233616530666331363462663463636131343838383564332f74756d626c725f6d6a6776386b45754d67317338376e37396f315f3430302e676966" alt="Loading" />
           </div>
@@ -145,12 +178,13 @@ const Home = () => {
           <PokemonSearch
             getPokemon={getPokemon}
             fetchAllPokemonByType={fetchAllPokemonByType}
+            fetchPokemonsByAbility={fetchPokemonsByAbility}
           />
         </div>
 
         {/* Div que mostra Pokemon pesquisado por Nome ou ID */}
         <div
-          style={{ marginTop: 20, display: "flex", justifyContent: 'center' }}
+          style={{ display: "flex", justifyContent: 'center' }}
         >
           {!loading && pokemon ? (
             <div style={{ display: `${visibleCard}`, justifyContent: 'center' }}>
@@ -171,14 +205,26 @@ const Home = () => {
         </div>
 
         {/* Div que mostra Pokemons pesquisados por tipo */}
-        <div
-          style={{ marginTop: 20, display: 'flex', justifyContent: 'center', verticalAlign: 'middle' }}
-        >
+        <div style={{ display: 'flex', justifyContent: 'center'}}>
           {!loading && pokemonListNamesByType ? (
             <div style={{ display: `${visibleListType}`, justifyContent: 'center' }}>
             {/* {console.log(test)} */}
             <PokemonList
               pokemonListNames={pokemonListNamesByType}
+              getPokemon={getPokemon}
+              offset={offset}
+            />
+            </div>
+          ) : null}
+        </div>
+
+        {/* Div que mostra Pokemons pesquisados por Abilidade */}
+        <div style={{ display: 'flex', justifyContent: 'center'}}>
+          {!loading && pokemonListNamesByAbility ? (
+            <div style={{ display: `${visibleListAbility}`, justifyContent: 'center' }}>
+            {/* {console.log(test)} */}
+            <PokemonList
+              pokemonListNames={pokemonListNamesByAbility}
               getPokemon={getPokemon}
               offset={offset}
             />
@@ -216,6 +262,7 @@ const useStyles = makeStyles({
   divSearch: {
     display: 'flex',
     justifyContent: 'center',
+    marginBottom: 20
   },
   title: {
     fontSize: 72,

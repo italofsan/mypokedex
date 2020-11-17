@@ -10,7 +10,8 @@ const baseURL = 'https://pokeapi.co/api/v2';
 
 const query = {
   pokemon: 'pokemon',
-  type: 'type'
+  type: 'type',
+  ability: 'ability'
 };
 
 export async function fetchPokemon(pokemon){
