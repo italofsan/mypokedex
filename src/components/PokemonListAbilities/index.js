@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import {
   Button,
   Card,
@@ -14,17 +13,38 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import { fetchPokemon } from '../../services/api';
 
-function PokemonList(props) {
+function PokemonListTypes(props) {
   const history = useHistory();
   const classes = useStyles();
   
-  const pokemonListNames = props.pokemonListNames;
-  const offset = props.offset;
+  
+  const pokemonListNamesByAbility = props.pokemonListNamesByAbility;
+ 
+  const [pokemonsList, setPokemonsList] = useState([]);
+ 
+  useEffect(()=>{
+    pokemonListNamesByAbility.map((pokemon, index) => {
+  
+      const getPokemon = async (pokemon) => {
+        const response = await fetchPokemon(pokemon);
+        const results = await response.json();
+        setPokemonsList(pokemonsList => [...pokemonsList, {
+          id: results.id,
+          name: results.name
+        }])
+        }
+      getPokemon(pokemon);
+    })
+    console.log(pokemonsList);
+    return setPokemonsList([]);
+  },[pokemonListNamesByAbility]);
+
+
 
   return (
     <div className={classes.cardContainer}>
-      {pokemonListNames.map((pokemon, i) => {
-        if((i + offset)> 893){
+      {pokemonsList.map((pokemon, i) => {
+        if(pokemon.id > 893){
           return
         }
 
@@ -32,24 +52,24 @@ function PokemonList(props) {
           <Card className={classes.root} key={i}>
             <CardActionArea 
             onClick={() => history.push({
-              pathname: `/${pokemon}`, 
+              pathname: `/${pokemon.name}`, 
               state: {
-                pokeName: pokemon
+                pokeName: pokemon.name
               }
               })}
             >
             <CardContent style={{display: "flex", justifyContent: 'space-between'}}> 
                 <Typography variant='h5' style={{textTransform: "capitalize"}}>
-                  {pokemon}
+                  {pokemon.name}
                 </Typography>
                 <Typography variant='h5' style={{textTransform: "capitalize", color: '#CCC'}}>
-                  #{i + offset}
+                  #{pokemon.id}
                 </Typography>
               </CardContent>
               <CardMedia
                 className={classes.media}
-                image={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${i + offset}.png`}
-                title={pokemon}
+                image={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`}
+                title={pokemon.name}
               />
             </CardActionArea>
             <CardActions>
@@ -88,4 +108,4 @@ const useStyles = makeStyles({
   },
 });
 
-export default withRouter(PokemonList);
+export default withRouter(PokemonListTypes);

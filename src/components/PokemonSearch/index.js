@@ -23,7 +23,7 @@ const PokemonSearch = (props) => {
   const classes = useStyles();
 
   const [pokemon, setPokemon] = useState('');
-  const [type, setType] = useState('');
+  const [type, setType] = useState();
   const [ability, setAbility] = useState('');
 
   return (
@@ -44,12 +44,7 @@ const PokemonSearch = (props) => {
             endAdornment={
               <InputAdornment position='end'>
                 <IconButton
-                  onClick={(e) => {
-                    if(pokemon === ""){
-                      return
-                    }
-                    props.getPokemon(pokemon)
-                  }}
+                  onClick={(e) => props.getPokemon(pokemon)}
                 >
                   <Search fontSize='small' />
                 </IconButton>
@@ -59,9 +54,10 @@ const PokemonSearch = (props) => {
 
           <OutlinedInput
             color='secondary'
+            style={{ backgroundColor: '#FFF' }}
             placeholder='Search Pokemon by Type'
             onChange={(e) => setType(e.target.value)}
-            onSubmit={(e) => props.fetchAllPokemonByType(type)}
+            onSubmit={(e) => props.fetchPokemonsByType(type)}
             size='small'
             InputLabelProps={{
               shrink: true,
@@ -69,7 +65,7 @@ const PokemonSearch = (props) => {
             variant='outlined'
             endAdornment={
               <InputAdornment position='end'>
-                <IconButton onClick={(e) => props.fetchAllPokemonByType(type)}>
+                <IconButton onClick={(e) => props.fetchPokemonsByType(type)}>
                   <Search fontSize='small' />
                 </IconButton>
               </InputAdornment>
@@ -78,6 +74,7 @@ const PokemonSearch = (props) => {
 
           <OutlinedInput
             color='secondary'
+            style={{ backgroundColor: '#FFF' }}
             placeholder='Search Pokemon by Ability'
             onChange={(e) => setAbility(e.target.value)}
             onSubmit={(e) => props.fetchPokemonsByAbility(ability)}

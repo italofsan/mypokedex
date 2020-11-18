@@ -3,42 +3,48 @@ import { Container, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router-dom';
 
+import { fetchPokemon } from '../../services/api';
 import axios from 'axios';
 
 import PokemonList from '../../components/List';
 import Pagination from '../../components/Pagination';
 import PokemonCard from '../../components/PokemonCard';
 import PokemonSearch from '../../components/PokemonSearch';
+import PokemonListTypes from '../../components/PokemonListTypes';
+import PokemonListAbilities from '../../components/PokemonListAbilities';
 
-import { fetchPokemon } from '../../services/api';
 
 const Home = () => {
   const classes = useStyles();
 
-  const [loading, setLoading] = useState(false);
   const [pokemon, setPokemon] = useState();
+  const [loading, setLoading] = useState(false);
   const [pokemonListNamesByType, setPokemonListNamesByType] = useState([]);
   const [pokemonListNamesByAbility, setPokemonListNamesByAbility] = useState([]);
 
   const [loading2, setLoading2] = useState(false);
-  const [pokemonListNames, setPokemonListNames] = useState([]);
-  const [currentPageUrl, setCurrentPageUrl] = useState(
-    'https://pokeapi.co/api/v2/pokemon?offset=0&limit=20'
-  );
+
+  // Estados que fazem o funcionamento da lista de todos os Pokemons
+  const [offset, setOffset] = useState(1);
   const [nextPageUrl, setNextPageUrl] = useState();
   const [prevPageUrl, setPrevPageUrl] = useState();
-  const [offset, setOffset] = useState(1);
-
+  const [currentPageUrl, setCurrentPageUrl] = useState(
+    'https://pokeapi.co/api/v2/pokemon?offset=0&limit=20'
+    );
+  const [pokemonListNames, setPokemonListNames] = useState([]);
+    
+  // Estados criados para gerenciar a exibicao dos componentes
   const [visibleCard, setVisibleCard] = useState("flex");
   const [visibleListAll, setVisibleListAll] = useState("flex");
   const [visibleListType, setVisibleListType] = useState("flex");
   const [visibleListAbility, setVisibleListAbility] = useState("flex");
-
+  
+  // Funcao que executa a pesquisa de todos os Pokemon de forma paginada
   useEffect(() => {
-    setLoading2(true);
+    setLoading(true);
     const fetchAllPokemon = async () => {
       await axios.get(currentPageUrl).then((response) => {
-        setLoading2(false);
+        setLoading(false);
         setNextPageUrl(response.data.next);
         setPrevPageUrl(response.data.previous);
         setPokemonListNames(
@@ -49,16 +55,19 @@ const Home = () => {
     fetchAllPokemon();
   }, [currentPageUrl]);
 
+  // Funcao que carrega a página seguinte
   function goNextPage() {
     setCurrentPageUrl(nextPageUrl);
     setOffset(offset + 20);
   }
 
+  // Funcao que carrega a página anterior
   function goPrevPage() {
     setCurrentPageUrl(prevPageUrl);
     setOffset(offset - 20);
   }
 
+  // Função que executa a pesquisa Pokemon por nome ou id
   const getPokemon = async (query) => {
     setVisibleCard("flex");
     setVisibleListAll("none");
@@ -71,60 +80,32 @@ const Home = () => {
     setLoading(false);
   };
 
-  const [test, setTest] = useState([]);
-
-  const fetchAllPokemonByType = async (type) => {
+  // Função que executa a pesquisa Pokemon por tipo
+  const fetchPokemonsByType = async (type) => {
     setVisibleCard("none");
     setVisibleListAll("none");
     setVisibleListType("flex");
     setVisibleListAbility("none");
-    await axios
-      .get(`https://pokeapi.co/api/v2/type/${type}/`)
+    await axios.get(`https://pokeapi.co/api/v2/type/${type}/`)
       .then((response) => {
-        // console.log(
-        //   response.data.pokemon.map((pokemon) => pokemon.pokemon.name)
-        // );
         setPokemonListNamesByType(
           response.data.pokemon.map((pokemon) => pokemon.pokemon.name)
         );
-        // response.data.pokemon.map( async (pokemon) => {
-        //   await axios.get(pokemon.pokemon.url)
-        //   .then((response) => {
-        //     // console.log(response.data.name)
-        //     setTest([...test, response.data.name])
-        //   })
-        // })
-        
       });
-    // console.log(pokemonListNamesByType);
-    // console.log(test);
   };
 
+  // Função que executa pesquisa Pokemon por abilidade
   const fetchPokemonsByAbility = async (ability) => {
     setVisibleCard("none");
     setVisibleListAll("none");
     setVisibleListType("none");
     setVisibleListAbility("flex");
-    await axios
-      .get(`https://pokeapi.co/api/v2/ability/${ability}/`)
+    await axios.get(`https://pokeapi.co/api/v2/ability/${ability}/`)
       .then((response) => {
-        // console.log(
-        //   response.data.pokemon.map((pokemon) => pokemon.pokemon.name)
-        // );
         setPokemonListNamesByAbility(
           response.data.pokemon.map((pokemon) => pokemon.pokemon.name)
-        );
-        // response.data.pokemon.map( async (pokemon) => {
-        //   await axios.get(pokemon.pokemon.url)
-        //   .then((response) => {
-        //     // console.log(response.data.name)
-        //     setTest([...test, response.data.name])
-        //   })
-        // })
-        
+        );        
       });
-    // console.log(pokemonListNamesByType);
-    // console.log(test);
   };
 
   // Função que formata o ID do Pokemon para um número de três algarismos
@@ -151,14 +132,16 @@ const Home = () => {
         <div className={classes.divSearch}>
           <PokemonSearch
             getPokemon={getPokemon}
-            fetchAllPokemonByType={fetchAllPokemonByType}
+            fetchPokemonsByType={fetchPokemonsByType}
             fetchPokemonsByAbility={fetchPokemonsByAbility}
-          />
+            />
         </div>
-        
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <div className={classes.loading} style={{display: 'flex'}}>
-            <img src="https://camo.githubusercontent.com/9be29021cfdb21b2cc257a3efcb269f64d42f5b6/687474703a2f2f32352e6d656469612e74756d626c722e636f6d2f63393961353739646233616530666331363462663463636131343838383564332f74756d626c725f6d6a6776386b45754d67317338376e37396f315f3430302e676966" alt="Loading" />
+          
+        <div className={classes.divLoading}>
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <div className={classes.loading} style={{display: 'flex'}}>
+              <img src="https://camo.githubusercontent.com/9be29021cfdb21b2cc257a3efcb269f64d42f5b6/687474703a2f2f32352e6d656469612e74756d626c722e636f6d2f63393961353739646233616530666331363462663463636131343838383564332f74756d626c725f6d6a6776386b45754d67317338376e37396f315f3430302e676966" alt="Loading" />
+            </div>
           </div>
         </div>
       </Container>
@@ -177,7 +160,7 @@ const Home = () => {
         <div className={classes.divSearch}>
           <PokemonSearch
             getPokemon={getPokemon}
-            fetchAllPokemonByType={fetchAllPokemonByType}
+            fetchPokemonsByType={fetchPokemonsByType}
             fetchPokemonsByAbility={fetchPokemonsByAbility}
           />
         </div>
@@ -208,11 +191,9 @@ const Home = () => {
         <div style={{ display: 'flex', justifyContent: 'center'}}>
           {!loading && pokemonListNamesByType ? (
             <div style={{ display: `${visibleListType}`, justifyContent: 'center' }}>
-            {/* {console.log(test)} */}
-            <PokemonList
-              pokemonListNames={pokemonListNamesByType}
+            <PokemonListTypes
+              pokemonListNamesByType={pokemonListNamesByType}
               getPokemon={getPokemon}
-              offset={offset}
             />
             </div>
           ) : null}
@@ -222,11 +203,9 @@ const Home = () => {
         <div style={{ display: 'flex', justifyContent: 'center'}}>
           {!loading && pokemonListNamesByAbility ? (
             <div style={{ display: `${visibleListAbility}`, justifyContent: 'center' }}>
-            {/* {console.log(test)} */}
-            <PokemonList
-              pokemonListNames={pokemonListNamesByAbility}
+            <PokemonListAbilities
+              pokemonListNamesByAbility={pokemonListNamesByAbility}
               getPokemon={getPokemon}
-              offset={offset}
             />
             </div>
           ) : null}
@@ -263,6 +242,13 @@ const useStyles = makeStyles({
     display: 'flex',
     justifyContent: 'center',
     marginBottom: 20
+  },
+  divLoading: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
   },
   title: {
     fontSize: 72,
