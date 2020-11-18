@@ -17,7 +17,6 @@ function PokemonListTypes(props) {
   const history = useHistory();
   const classes = useStyles();
   
-  
   const pokemonListNamesByType = props.pokemonListNamesByType;
  
   const [pokemonsList, setPokemonsList] = useState([]);
@@ -35,11 +34,18 @@ function PokemonListTypes(props) {
         }
       getPokemon(pokemon);
     })
-    console.log(pokemonsList);
     return setPokemonsList([]);
   },[pokemonListNamesByType]);
 
-
+  const formatId = (id) => {
+    if (id.length === 1) {
+      return '00' + id;
+    } else if (id.length === 2) {
+      return '0' + id;
+    } else {
+      return id;
+    }
+  };
 
   return (
     <div className={classes.cardContainer}>
@@ -63,12 +69,12 @@ function PokemonListTypes(props) {
                   {pokemon.name}
                 </Typography>
                 <Typography variant='h5' style={{textTransform: "capitalize", color: '#CCC'}}>
-                  #{pokemon.id}
+                  #{formatId(pokemon.id.toString())}
                 </Typography>
               </CardContent>
               <CardMedia
                 className={classes.media}
-                image={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`}
+                image={`https://assets.pokemon.com/assets/cms2/img/pokedex/full/${formatId(pokemon.id.toString())}.png`}
                 title={pokemon.name}
               />
             </CardActionArea>
@@ -77,9 +83,9 @@ function PokemonListTypes(props) {
                 size='small'
                 color='primary'
                 onClick={() => history.push({
-                  pathname: `/${pokemon}`, 
+                  pathname: `/${pokemon.name}`, 
                   state: {
-                    pokeName: pokemon
+                    pokeName: pokemon.name
                   }
                   })}
                 >

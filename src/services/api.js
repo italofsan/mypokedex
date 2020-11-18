@@ -17,7 +17,3 @@ const query = {
 export async function fetchPokemon(pokemon){
   return fetch(`${baseURL}/${query.pokemon}/${pokemon}/`);
 }
-
-export async function fetchPokemonByType(type){
-  return fetch(`${baseURL}/${query.type}/${type}/`);
-}

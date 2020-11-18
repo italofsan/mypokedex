@@ -23,10 +23,6 @@ const PokemonCard = (props) => {
   const pokeStats = props.pokeStats;
   const pokeMoves = props.pokeMoves;
 
-  const normalise = value => (value) * 100 / (255);
-
-
-
   return (
     <>
       <Card className={classes.card}>

@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React from 'react';
 import {
   Button,
   Card,
@@ -12,14 +11,22 @@ import {
 import { withRouter, useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 
-import { fetchPokemon } from '../../services/api';
-
-function PokemonList(props) {
+function PokemonListAll(props) {
   const history = useHistory();
   const classes = useStyles();
   
   const pokemonListNames = props.pokemonListNames;
   const offset = props.offset;
+
+  const formatId = (id) => {
+    if (id.length === 1) {
+      return '00' + id;
+    } else if (id.length === 2) {
+      return '0' + id;
+    } else {
+      return id;
+    }
+  };
 
   return (
     <div className={classes.cardContainer}>
@@ -43,12 +50,12 @@ function PokemonList(props) {
                   {pokemon}
                 </Typography>
                 <Typography variant='h5' style={{textTransform: "capitalize", color: '#CCC'}}>
-                  #{i + offset}
+                  #{formatId((i + offset).toString())}
                 </Typography>
               </CardContent>
               <CardMedia
                 className={classes.media}
-                image={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${i + offset}.png`}
+                image={`https://assets.pokemon.com/assets/cms2/img/pokedex/full/${formatId((i + offset).toString())}.png`}
                 title={pokemon}
               />
             </CardActionArea>
@@ -88,4 +95,4 @@ const useStyles = makeStyles({
   },
 });
 
-export default withRouter(PokemonList);
+export default withRouter(PokemonListAll);

@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import {
-  Button,
   Container,
   IconButton,
   InputAdornment,
   OutlinedInput
 } from '@material-ui/core';
 import { Search } from '@material-ui/icons';
-import { makeStyles } from '@material-ui/core/styles';
 
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
@@ -20,8 +18,6 @@ const theme = createMuiTheme({
 });
 
 const PokemonSearch = (props) => {
-  const classes = useStyles();
-
   const [pokemon, setPokemon] = useState('');
   const [type, setType] = useState();
   const [ability, setAbility] = useState('');
@@ -91,32 +87,11 @@ const PokemonSearch = (props) => {
               </InputAdornment>
             }
           />
-          
-
-          {/* <div style={{display: 'flex', alignItems: 'center'}}>
-            <Button onClick={() => window.location.reload(false)} className={classes.button} size='small'>
-              Limpar Pesquisas
-            </Button>
-          </div> */}
         </div>
         
       </Container>
     </ThemeProvider>
   );
 };
-
-const useStyles = makeStyles({
-  search: {
-    borderColor: '#FFF',
-  },
-  button:{
-    color: '#FFF',
-    backgroundColor: '#e84848',
-    '&:hover': {
-      backgroundColor: 'rgba(232, 72, 72, 0.9)'
-    },
-    marginTop: 10
-  }
-});
 
 export default PokemonSearch;

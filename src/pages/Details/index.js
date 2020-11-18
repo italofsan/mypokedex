@@ -59,7 +59,7 @@ const Details = (props) => {
   if (loading) {
     return (
       <div className={classes.loading} style={{display: 'flex'}}>
-        <img src="https://camo.githubusercontent.com/9be29021cfdb21b2cc257a3efcb269f64d42f5b6/687474703a2f2f32352e6d656469612e74756d626c722e636f6d2f63393961353739646233616530666331363462663463636131343838383564332f74756d626c725f6d6a6776386b45754d67317338376e37396f315f3430302e676966" alt="Loading" />
+        <img src="../assets/loading.gif" alt="Loading" />
       </div>
     );
   }

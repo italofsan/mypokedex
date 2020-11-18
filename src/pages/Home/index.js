@@ -6,10 +6,10 @@ import { withRouter } from 'react-router-dom';
 import { fetchPokemon } from '../../services/api';
 import axios from 'axios';
 
-import PokemonList from '../../components/List';
 import Pagination from '../../components/Pagination';
 import PokemonCard from '../../components/PokemonCard';
 import PokemonSearch from '../../components/PokemonSearch';
+import PokemonListAll from '../../components/PokemonListAll';
 import PokemonListTypes from '../../components/PokemonListTypes';
 import PokemonListAbilities from '../../components/PokemonListAbilities';
 
@@ -21,8 +21,6 @@ const Home = () => {
   const [loading, setLoading] = useState(false);
   const [pokemonListNamesByType, setPokemonListNamesByType] = useState([]);
   const [pokemonListNamesByAbility, setPokemonListNamesByAbility] = useState([]);
-
-  const [loading2, setLoading2] = useState(false);
 
   // Estados que fazem o funcionamento da lista de todos os Pokemons
   const [offset, setOffset] = useState(1);
@@ -213,9 +211,9 @@ const Home = () => {
 
         {/* Div que mostra a lista de todos os Pokemons */}
         <div  style={{ display: `${visibleListAll}`, justifyContent: 'center' }}>
-          {!loading2 ? (
+          {!loading ? (
             <div> 
-              <PokemonList
+              <PokemonListAll
                 pokemonListNames={pokemonListNames}
                 getPokemon={getPokemon}
                 offset={offset}
