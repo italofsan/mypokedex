@@ -16,25 +16,27 @@ import { fetchPokemon } from '../../services/api';
 function PokemonListTypes(props) {
   const history = useHistory();
   const classes = useStyles();
-  
+
   const pokemonListNamesByAbility = props.pokemonListNamesByAbility;
   const [pokemonsList, setPokemonsList] = useState([]);
- 
-  useEffect(()=>{
+
+  useEffect(() => {
     pokemonListNamesByAbility.map((pokemon) => {
-  
       const getPokemon = async (pokemon) => {
         const response = await fetchPokemon(pokemon);
         const results = await response.json();
-        setPokemonsList(pokemonsList => [...pokemonsList, {
-          id: results.id,
-          name: results.name
-        }])
-        }
+        setPokemonsList((pokemonsList) => [
+          ...pokemonsList,
+          {
+            id: results.id,
+            name: results.name,
+          },
+        ]);
+      };
       getPokemon(pokemon);
-    })
+    });
     return setPokemonsList([]);
-  },[pokemonListNamesByAbility]);
+  }, [pokemonListNamesByAbility]);
 
   const formatId = (id) => {
     if (id.length === 1) {
@@ -48,52 +50,70 @@ function PokemonListTypes(props) {
 
   return (
     <div className={classes.cardContainer}>
-      {pokemonsList.map((pokemon, i) => {
-        if(pokemon.id > 893){
-          return
-        }
+      {pokemonsList
+        .sort((a, b) => {
+          return a.id < -b.id;
+        })
+        .map((pokemon, i) => {
+          if (pokemon.id > 893) {
+            return;
+          }
 
-        return (
-          <Card className={classes.root} key={i}>
-            <CardActionArea 
-            onClick={() => history.push({
-              pathname: `/${pokemon.name}`, 
-              state: {
-                pokeName: pokemon.name
-              }
-              })}
-            >
-            <CardContent style={{display: "flex", justifyContent: 'space-between'}}> 
-                <Typography variant='h5' style={{textTransform: "capitalize"}}>
-                  {pokemon.name}
-                </Typography>
-                <Typography variant='h5' style={{textTransform: "capitalize", color: '#CCC'}}>
-                  #{pokemon.id}
-                </Typography>
-              </CardContent>
-              <CardMedia
-                className={classes.media}
-                image={`https://assets.pokemon.com/assets/cms2/img/pokedex/full/${formatId(pokemon.id.toString())}.png`}
-                title={pokemon.name}
-              />
-            </CardActionArea>
-            <CardActions>
-              <Button
-                size='small'
-                color='primary'
-                onClick={() => history.push({
-                  pathname: `/${pokemon.name}`, 
-                  state: {
-                    pokeName: pokemon.name
-                  }
-                  })}
+          return (
+            <Card className={classes.root} key={i}>
+              <CardActionArea
+                onClick={() =>
+                  history.push({
+                    pathname: `/${pokemon.name}`,
+                    state: {
+                      pokeName: pokemon.name,
+                    },
+                  })
+                }
+              >
+                <CardContent
+                  style={{ display: 'flex', justifyContent: 'space-between' }}
                 >
-                <Typography variant='p'>More Informations</Typography>
-              </Button>
-            </CardActions>
-          </Card>
-        )}
-      )}
+                  <Typography
+                    variant='h5'
+                    style={{ textTransform: 'capitalize' }}
+                  >
+                    {pokemon.name}
+                  </Typography>
+                  <Typography
+                    variant='h5'
+                    style={{ textTransform: 'capitalize', color: '#CCC' }}
+                  >
+                    #{pokemon.id}
+                  </Typography>
+                </CardContent>
+                <CardMedia
+                  className={classes.media}
+                  image={`https://assets.pokemon.com/assets/cms2/img/pokedex/full/${formatId(
+                    pokemon.id.toString()
+                  )}.png`}
+                  title={pokemon.name}
+                />
+              </CardActionArea>
+              <CardActions>
+                <Button
+                  size='small'
+                  color='primary'
+                  onClick={() =>
+                    history.push({
+                      pathname: `/${pokemon.name}`,
+                      state: {
+                        pokeName: pokemon.name,
+                      },
+                    })
+                  }
+                >
+                  <Typography variant='p'>More Informations</Typography>
+                </Button>
+              </CardActions>
+            </Card>
+          );
+        })}
     </div>
   );
 }
