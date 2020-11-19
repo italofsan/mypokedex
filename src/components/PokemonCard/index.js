@@ -23,11 +23,22 @@ const PokemonCard = (props) => {
   const pokeStats = props.pokeStats;
   const pokeMoves = props.pokeMoves;
 
+  // Função que formata o ID do Pokemon para um número de três algarismos
+  const formatId = (id) => {
+    if (id.length === 1) {
+      return '00' + id;
+    } else if (id.length === 2) {
+      return '0' + id;
+    } else {
+      return id;
+    }
+  };
+
   return (
     <>
       <Card className={classes.card}>
         <CardActionArea onClick={() => history.push({
-          pathname: `/${pokeName}`, 
+          pathname: `/${id}/details`, 
           state: {
             pokeId: id,
             pokeName: pokeName,
@@ -43,12 +54,12 @@ const PokemonCard = (props) => {
             {pokeName}
           </Typography>
           <Typography variant='h5'style={{textTransform: "capitalize", color: '#CCC'}}>
-            #{id}
+            #{formatId(id.toString())}
           </Typography>
         </CardContent>
         <CardMedia
           className={classes.media}
-          image={`https://assets.pokemon.com/assets/cms2/img/pokedex/full/${id}.png`}
+          image={`https://assets.pokemon.com/assets/cms2/img/pokedex/full/${formatId(id.toString())}.png`}
           title={pokeName}
         />
         </CardActionArea>
@@ -57,7 +68,7 @@ const PokemonCard = (props) => {
             size='small'
             color='primary'
             onClick={() => history.push({
-              pathname: `/${pokeName}`, 
+              pathname: `/${id}/details`, 
               state: {
                 pokeId: id,
                 pokeName: pokeName,

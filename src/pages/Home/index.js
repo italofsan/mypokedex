@@ -3,8 +3,10 @@ import { Container, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router-dom';
 
-import { fetchPokemon } from '../../services/api';
+// import { fetchPokemon } from '../../services/api';
 import axios from 'axios';
+
+import api from '../../services/api';
 
 import Pagination from '../../components/Pagination';
 import PokemonCard from '../../components/PokemonCard';
@@ -13,6 +15,7 @@ import PokemonListAll from '../../components/PokemonListAll';
 import PokemonListTypes from '../../components/PokemonListTypes';
 import PokemonListAbilities from '../../components/PokemonListAbilities';
 
+import loadingImage from '../../assets/loading.gif';
 
 const Home = () => {
   const classes = useStyles();
@@ -72,9 +75,16 @@ const Home = () => {
     setVisibleListType("none");
     setVisibleListAbility("none");
     setLoading(true);
-    const response = await fetchPokemon(query);
-    const results = await response.json();
-    setPokemon(results);
+
+    try{
+      await axios.get(`https://pokeapi.co/api/v2/pokemon/${query}/`)
+      .then((response) => {
+        setPokemon(response.data)
+      })
+    } catch (error){
+      alert("Pokemon não encontrado!");
+      window.location.reload();
+    }
     setLoading(false);
   };
 
@@ -84,12 +94,20 @@ const Home = () => {
     setVisibleListAll("none");
     setVisibleListType("flex");
     setVisibleListAbility("none");
-    await axios.get(`https://pokeapi.co/api/v2/type/${type}/`)
+    setLoading(true);
+
+    try{
+    await api.get(`/type/${type}/`)
       .then((response) => {
         setPokemonListNamesByType(
           response.data.pokemon.map((pokemon) => pokemon.pokemon.name)
         );
-      });
+      })
+    } catch (error){
+      alert("Please, insert a valid type of pokemon!");
+      window.location.reload();
+    }
+    setLoading(false);
   };
 
   // Função que executa pesquisa Pokemon por abilidade
@@ -98,23 +116,20 @@ const Home = () => {
     setVisibleListAll("none");
     setVisibleListType("none");
     setVisibleListAbility("flex");
+    setLoading(true);
+
+    try{
     await axios.get(`https://pokeapi.co/api/v2/ability/${ability}/`)
       .then((response) => {
         setPokemonListNamesByAbility(
           response.data.pokemon.map((pokemon) => pokemon.pokemon.name)
         );        
-      });
-  };
-
-  // Função que formata o ID do Pokemon para um número de três algarismos
-  const formatId = (id) => {
-    if (id.length === 1) {
-      return '00' + id;
-    } else if (id.length === 2) {
-      return '0' + id;
-    } else {
-      return id;
+      })
+    } catch (error){
+      alert("Please, insert a valid ability of pokemon!");
+      window.location.reload();
     }
+    setLoading(false);
   };
 
   // Mostrado quando está sendo realizada alguma requisição
@@ -138,7 +153,7 @@ const Home = () => {
         <div className={classes.divLoading}>
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <div className={classes.loading} style={{display: 'flex'}}>
-              <img src="../assets/loading.gif" alt="Loading" />
+              <img src={loadingImage} alt="Loading" />
             </div>
           </div>
         </div>
@@ -172,7 +187,7 @@ const Home = () => {
               {console.log(pokemon)}
               <PokemonCard
                 pokeName={pokemon.name}
-                pokeId={() => formatId(pokemon.id.toString())}
+                pokeId={pokemon.id}
                 pokeImage={
                   pokemon.sprites.other['official-artwork'].front_default
                 }

@@ -23,20 +23,20 @@ function PokemonListTypes(props) {
  
   useEffect(()=>{
     pokemonListNamesByType.map((pokemon, index) => {
-  
-      const getPokemon = async (pokemon) => {
+        const getPokemon = async (pokemon) => {
         const response = await fetchPokemon(pokemon);
         const results = await response.json();
         setPokemonsList(pokemonsList => [...pokemonsList, {
           id: results.id,
           name: results.name
         }])
-        }
-      getPokemon(pokemon);
+      }
+      getPokemon(pokemon);    
     })
     return setPokemonsList([]);
   },[pokemonListNamesByType]);
 
+  // Função que formata o ID do Pokemon para um número de três algarismos
   const formatId = (id) => {
     if (id.length === 1) {
       return '00' + id;
@@ -49,7 +49,9 @@ function PokemonListTypes(props) {
 
   return (
     <div className={classes.cardContainer}>
-      {pokemonsList.map((pokemon, i) => {
+      {pokemonsList.sort((a, b) => {
+	    	return (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0);
+      }).map((pokemon, i) => {
         if(pokemon.id > 893){
           return
         }
@@ -58,7 +60,7 @@ function PokemonListTypes(props) {
           <Card className={classes.root} key={i}>
             <CardActionArea 
             onClick={() => history.push({
-              pathname: `/${pokemon.name}`, 
+              pathname: `/${pokemon.id}/details`, 
               state: {
                 pokeName: pokemon.name
               }
@@ -83,7 +85,7 @@ function PokemonListTypes(props) {
                 size='small'
                 color='primary'
                 onClick={() => history.push({
-                  pathname: `/${pokemon.name}`, 
+                  pathname: `/${pokemon.id}/details`, 
                   state: {
                     pokeName: pokemon.name
                   }
