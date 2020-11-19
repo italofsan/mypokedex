@@ -13,8 +13,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import loadingImage from '../../assets/loading.gif';
 import pokemonType from './styles';
 
-import loadingImage from '../../assets/loading.gif';
-
 const Details = (props) => {
   const classes = useStyles();
   const history = useHistory();
