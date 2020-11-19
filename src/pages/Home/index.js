@@ -23,7 +23,9 @@ const Home = () => {
   const [pokemon, setPokemon] = useState();
   const [loading, setLoading] = useState(false);
   const [pokemonListNamesByType, setPokemonListNamesByType] = useState([]);
-  const [pokemonListNamesByAbility, setPokemonListNamesByAbility] = useState([]);
+  const [pokemonListNamesByAbility, setPokemonListNamesByAbility] = useState(
+    []
+  );
 
   // Estados que fazem o funcionamento da lista de todos os Pokemons
   const [offset, setOffset] = useState(1);
@@ -31,15 +33,15 @@ const Home = () => {
   const [prevPageUrl, setPrevPageUrl] = useState();
   const [currentPageUrl, setCurrentPageUrl] = useState(
     'https://pokeapi.co/api/v2/pokemon?offset=0&limit=20'
-    );
+  );
   const [pokemonListNames, setPokemonListNames] = useState([]);
-    
+
   // Estados criados para gerenciar a exibicao dos componentes
-  const [visibleCard, setVisibleCard] = useState("flex");
-  const [visibleListAll, setVisibleListAll] = useState("flex");
-  const [visibleListType, setVisibleListType] = useState("flex");
-  const [visibleListAbility, setVisibleListAbility] = useState("flex");
-  
+  const [visibleCard, setVisibleCard] = useState('flex');
+  const [visibleListAll, setVisibleListAll] = useState('flex');
+  const [visibleListType, setVisibleListType] = useState('flex');
+  const [visibleListAbility, setVisibleListAbility] = useState('flex');
+
   // Funcao que executa a pesquisa de todos os Pokemon de forma paginada
   useEffect(() => {
     setLoading(true);
@@ -56,13 +58,13 @@ const Home = () => {
     fetchAllPokemon();
   }, [currentPageUrl]);
 
-  // Funcao que carrega a página seguinte
+  // Função que carrega a página seguinte
   function goNextPage() {
     setCurrentPageUrl(nextPageUrl);
     setOffset(offset + 20);
   }
 
-  // Funcao que carrega a página anterior
+  // Função que carrega a página anterior
   function goPrevPage() {
     setCurrentPageUrl(prevPageUrl);
     setOffset(offset - 20);
@@ -70,10 +72,10 @@ const Home = () => {
 
   // Função que executa a pesquisa Pokemon por nome ou id
   const getPokemon = async (query) => {
-    setVisibleCard("flex");
-    setVisibleListAll("none");
-    setVisibleListType("none");
-    setVisibleListAbility("none");
+    setVisibleCard('flex');
+    setVisibleListAll('none');
+    setVisibleListType('none');
+    setVisibleListAbility('none');
     setLoading(true);
 
     try{
@@ -147,9 +149,9 @@ const Home = () => {
             getPokemon={getPokemon}
             fetchPokemonsByType={fetchPokemonsByType}
             fetchPokemonsByAbility={fetchPokemonsByAbility}
-            />
+          />
         </div>
-          
+
         <div className={classes.divLoading}>
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <div className={classes.loading} style={{display: 'flex'}}>
@@ -179,11 +181,11 @@ const Home = () => {
         </div>
 
         {/* Div que mostra Pokemon pesquisado por Nome ou ID */}
-        <div
-          style={{ display: "flex", justifyContent: 'center' }}
-        >
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
           {!loading && pokemon ? (
-            <div style={{ display: `${visibleCard}`, justifyContent: 'center' }}>
+            <div
+              style={{ display: `${visibleCard}`, justifyContent: 'center' }}
+            >
               {console.log(pokemon)}
               <PokemonCard
                 pokeName={pokemon.name}
@@ -201,33 +203,43 @@ const Home = () => {
         </div>
 
         {/* Div que mostra Pokemons pesquisados por tipo */}
-        <div style={{ display: 'flex', justifyContent: 'center'}}>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
           {!loading && pokemonListNamesByType ? (
-            <div style={{ display: `${visibleListType}`, justifyContent: 'center' }}>
-            <PokemonListTypes
-              pokemonListNamesByType={pokemonListNamesByType}
-              getPokemon={getPokemon}
-            />
+            <div
+              style={{
+                display: `${visibleListType}`,
+                justifyContent: 'center',
+              }}
+            >
+              <PokemonListTypes
+                pokemonListNamesByType={pokemonListNamesByType}
+                getPokemon={getPokemon}
+              />
             </div>
           ) : null}
         </div>
 
         {/* Div que mostra Pokemons pesquisados por Abilidade */}
-        <div style={{ display: 'flex', justifyContent: 'center'}}>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
           {!loading && pokemonListNamesByAbility ? (
-            <div style={{ display: `${visibleListAbility}`, justifyContent: 'center' }}>
-            <PokemonListAbilities
-              pokemonListNamesByAbility={pokemonListNamesByAbility}
-              getPokemon={getPokemon}
-            />
+            <div
+              style={{
+                display: `${visibleListAbility}`,
+                justifyContent: 'center',
+              }}
+            >
+              <PokemonListAbilities
+                pokemonListNamesByAbility={pokemonListNamesByAbility}
+                getPokemon={getPokemon}
+              />
             </div>
           ) : null}
         </div>
 
         {/* Div que mostra a lista de todos os Pokemons */}
-        <div  style={{ display: `${visibleListAll}`, justifyContent: 'center' }}>
+        <div style={{ display: `${visibleListAll}`, justifyContent: 'center' }}>
           {!loading ? (
-            <div> 
+            <div>
               <PokemonListAll
                 pokemonListNames={pokemonListNames}
                 getPokemon={getPokemon}
@@ -238,7 +250,7 @@ const Home = () => {
                 goPrevPage={prevPageUrl ? goPrevPage : null}
               />
             </div>
-          ) : null }
+          ) : null}
         </div>
       </Container>
     </div>
@@ -254,7 +266,7 @@ const useStyles = makeStyles({
   divSearch: {
     display: 'flex',
     justifyContent: 'center',
-    marginBottom: 20
+    marginBottom: 20,
   },
   divLoading: {
     display: 'flex',
@@ -267,12 +279,12 @@ const useStyles = makeStyles({
     fontSize: 72,
   },
   loading: {
-    display: "flex", 
-    flexDirection: "row", 
-    justifyContent: "center", 
-    alignItems: "center", 
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
     marginTop: 50,
-  }
+  },
 });
 
 export default withRouter(Home);

@@ -16,24 +16,27 @@ import { fetchPokemon } from '../../services/api';
 function PokemonListTypes(props) {
   const history = useHistory();
   const classes = useStyles();
-  
+
   const pokemonListNamesByAbility = props.pokemonListNamesByAbility;
   const [pokemonsList, setPokemonsList] = useState([]);
- 
-  useEffect(()=>{
+
+  useEffect(() => {
     pokemonListNamesByAbility.map((pokemon) => {
       const getPokemon = async (pokemon) => {
         const response = await fetchPokemon(pokemon);
         const results = await response.json();
-        setPokemonsList(pokemonsList => [...pokemonsList, {
-          id: results.id,
-          name: results.name
-        }])
-        }
+        setPokemonsList((pokemonsList) => [
+          ...pokemonsList,
+          {
+            id: results.id,
+            name: results.name,
+          },
+        ]);
+      };
       getPokemon(pokemon);
-    })
+    });
     return setPokemonsList([]);
-  },[pokemonListNamesByAbility]);
+  }, [pokemonListNamesByAbility]);
 
   // Função que formata o ID do Pokemon para um número de três algarismos
   const formatId = (id) => {
@@ -87,15 +90,15 @@ function PokemonListTypes(props) {
                   pathname: `/${pokemon.id}/details`, 
                   state: {
                     pokeName: pokemon.name
-                  }
-                  })}
+                  }})
+                }
                 >
-                <Typography variant='p'>More Informations</Typography>
-              </Button>
-            </CardActions>
-          </Card>
-        )}
-      )}
+                  <Typography variant='p'>More Informations</Typography>
+                </Button>
+              </CardActions>
+            </Card>
+          );
+        })}
     </div>
   );
 }
