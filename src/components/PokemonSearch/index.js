@@ -40,7 +40,14 @@ const PokemonSearch = (props) => {
             endAdornment={
               <InputAdornment position='end'>
                 <IconButton
-                  onClick={(e) => props.getPokemon(pokemon)}
+                  onClick={(e) => {
+                    if(pokemon !== ''){
+                      props.getPokemon(pokemon)
+                    } else {
+                      alert("Please, insert a name ou id!")
+                      // window.location.reload();
+                    }
+                  }}
                 >
                   <Search fontSize='small' />
                 </IconButton>
@@ -53,7 +60,6 @@ const PokemonSearch = (props) => {
             style={{ backgroundColor: '#FFF' }}
             placeholder='Search Pokemon by Type'
             onChange={(e) => setType(e.target.value)}
-            onSubmit={(e) => props.fetchPokemonsByType(type)}
             size='small'
             InputLabelProps={{
               shrink: true,
@@ -61,7 +67,14 @@ const PokemonSearch = (props) => {
             variant='outlined'
             endAdornment={
               <InputAdornment position='end'>
-                <IconButton onClick={(e) => props.fetchPokemonsByType(type)}>
+                <IconButton onClick={(e) => {
+                  if(isNaN(type) && type !== ''){
+                    props.fetchPokemonsByType(type)
+                  } else {
+                    alert("This search does not accept numbers!")
+                  }
+                }}
+                >
                   <Search fontSize='small' />
                 </IconButton>
               </InputAdornment>
@@ -81,7 +94,14 @@ const PokemonSearch = (props) => {
             variant='outlined'
             endAdornment={
               <InputAdornment position='end'>
-                <IconButton onClick={(e) => props.fetchPokemonsByAbility(ability)}>
+                <IconButton onClick={(e) => {
+                  if(isNaN(ability) && ability !== ''){
+                    props.fetchPokemonsByAbility(ability)
+                  } else {
+                    alert("This search does not accept numbers!")
+                  }
+                }}
+                >
                   <Search fontSize='small' />
                 </IconButton>
               </InputAdornment>

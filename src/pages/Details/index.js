@@ -11,6 +11,8 @@ import { useLocation, useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import pokemonType from './styles';
 
+import loadingImage from '../../assets/loading.gif';
+
 const Details = (props) => {
   const classes = useStyles();
   const history = useHistory();
@@ -26,6 +28,7 @@ const Details = (props) => {
     getPokemon();
   },[pokemonName])
 
+  // Função que formata o ID do Pokemon para um número de três algarismos
   const formatId = (id) => {
     if (id.length === 1) {
       return "00" + id;
@@ -59,7 +62,7 @@ const Details = (props) => {
   if (loading) {
     return (
       <div className={classes.loading} style={{display: 'flex'}}>
-        <img src="../assets/loading.gif" alt="Loading" />
+        <img src={loadingImage} alt="Loading" />
       </div>
     );
   }

@@ -18,6 +18,7 @@ function PokemonListAll(props) {
   const pokemonListNames = props.pokemonListNames;
   const offset = props.offset;
 
+    // Função que formata o ID do Pokemon para um número de três algarismos
   const formatId = (id) => {
     if (id.length === 1) {
       return '00' + id;
@@ -39,7 +40,7 @@ function PokemonListAll(props) {
           <Card className={classes.root} key={i}>
             <CardActionArea 
             onClick={() => history.push({
-              pathname: `/${pokemon}`, 
+              pathname: `/${(i +offset)}/details`, 
               state: {
                 pokeName: pokemon
               }
@@ -64,7 +65,7 @@ function PokemonListAll(props) {
                 size='small'
                 color='primary'
                 onClick={() => history.push({
-                  pathname: `/${pokemon}`, 
+                  pathname: `/${(i + offset)}/details`, 
                   state: {
                     pokeName: pokemon
                   }
