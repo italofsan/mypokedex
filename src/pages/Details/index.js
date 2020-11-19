@@ -194,7 +194,7 @@ const Details = (props) => {
                       className={classes.text}
                       style={{ fontSize: 16 }}
                     >
-                      {move.move.name},{' '}
+                      {move.move.name}, 
                     </Typography>
                   ))}
                 </div>

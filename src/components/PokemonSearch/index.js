@@ -9,6 +9,9 @@ import { Search } from '@material-ui/icons';
 
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const theme = createMuiTheme({
   palette: {
     primary: {
@@ -19,7 +22,7 @@ const theme = createMuiTheme({
 
 const PokemonSearch = (props) => {
   const [pokemon, setPokemon] = useState('');
-  const [type, setType] = useState();
+  const [type, setType] = useState('');
   const [ability, setAbility] = useState('');
 
   return (
@@ -44,7 +47,15 @@ const PokemonSearch = (props) => {
                     if(pokemon !== ''){
                       props.getPokemon(pokemon)
                     } else {
-                      alert("Please, insert a name ou id!")
+                      toast.error("Please, insert a name ou id!", {
+                        position: 'top-right',
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                      })
                       // window.location.reload();
                     }
                   }}
@@ -71,7 +82,15 @@ const PokemonSearch = (props) => {
                   if(isNaN(type) && type !== ''){
                     props.fetchPokemonsByType(type)
                   } else {
-                    alert("This search does not accept numbers!")
+                    toast.error("Please, insert a valid type of pokemon!", {
+                      position: 'top-right',
+                      autoClose: 5000,
+                      hideProgressBar: false,
+                      closeOnClick: true,
+                      pauseOnHover: true,
+                      draggable: true,
+                      progress: undefined,
+                    })
                   }
                 }}
                 >
@@ -86,7 +105,6 @@ const PokemonSearch = (props) => {
             style={{ backgroundColor: '#FFF' }}
             placeholder='Search Pokemon by Ability'
             onChange={(e) => setAbility(e.target.value)}
-            onSubmit={(e) => props.fetchPokemonsByAbility(ability)}
             size='small'
             InputLabelProps={{
               shrink: true,
@@ -98,7 +116,15 @@ const PokemonSearch = (props) => {
                   if(isNaN(ability) && ability !== ''){
                     props.fetchPokemonsByAbility(ability)
                   } else {
-                    alert("This search does not accept numbers!")
+                    toast.error("Please, insert a valid ability of pokemon!", {
+                      position: 'top-right',
+                      autoClose: 5000,
+                      hideProgressBar: false,
+                      closeOnClick: true,
+                      pauseOnHover: true,
+                      draggable: true,
+                      progress: undefined,
+                    })
                   }
                 }}
                 >
@@ -107,8 +133,9 @@ const PokemonSearch = (props) => {
               </InputAdornment>
             }
           />
+          
         </div>
-        
+        <ToastContainer />
       </Container>
     </ThemeProvider>
   );

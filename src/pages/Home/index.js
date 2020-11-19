@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Container, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-// import { fetchPokemon } from '../../services/api';
 import axios from 'axios';
 
 import api from '../../services/api';
@@ -84,7 +85,15 @@ const Home = () => {
         setPokemon(response.data)
       })
     } catch (error){
-      alert("Pokemon não encontrado!");
+      toast.error("Pokemon não encontrado!", {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
       window.location.reload();
     }
     setLoading(false);
@@ -106,7 +115,15 @@ const Home = () => {
         );
       })
     } catch (error){
-      alert("Please, insert a valid type of pokemon!");
+      toast.error("Please, insert a valid type of pokemon!", {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
       window.location.reload();
     }
     setLoading(false);
@@ -121,14 +138,22 @@ const Home = () => {
     setLoading(true);
 
     try{
-    await axios.get(`https://pokeapi.co/api/v2/ability/${ability}/`)
+    await api.get(`/ability/${ability}/`)
       .then((response) => {
         setPokemonListNamesByAbility(
           response.data.pokemon.map((pokemon) => pokemon.pokemon.name)
         );        
       })
     } catch (error){
-      alert("Please, insert a valid ability of pokemon!");
+      toast.error("Please, insert a valid ability of pokemon!", {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
       window.location.reload();
     }
     setLoading(false);
@@ -159,6 +184,7 @@ const Home = () => {
             </div>
           </div>
         </div>
+        <ToastContainer />
       </Container>
     );
   }
@@ -252,6 +278,7 @@ const Home = () => {
             </div>
           ) : null}
         </div>
+        <ToastContainer />
       </Container>
     </div>
   );

@@ -18,11 +18,10 @@ function PokemonListTypes(props) {
   const classes = useStyles();
 
   const pokemonListNamesByType = props.pokemonListNamesByType;
-
   const [pokemonsList, setPokemonsList] = useState([]);
 
   useEffect(() => {
-    pokemonListNamesByType.map((pokemon, index) => {
+    pokemonListNamesByType.map((pokemon) => {
         const getPokemon = async (pokemon) => {
         const response = await fetchPokemon(pokemon);
         const results = await response.json();

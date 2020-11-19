@@ -25,16 +25,13 @@ function PokemonListTypes(props) {
       const getPokemon = async (pokemon) => {
         const response = await fetchPokemon(pokemon);
         const results = await response.json();
-        setPokemonsList((pokemonsList) => [
-          ...pokemonsList,
-          {
+        setPokemonsList((pokemonsList) => [...pokemonsList, {
             id: results.id,
             name: results.name,
-          },
-        ]);
-      };
+          }]);
+      }
       getPokemon(pokemon);
-    });
+    })
     return setPokemonsList([]);
   }, [pokemonListNamesByAbility]);
 
