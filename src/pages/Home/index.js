@@ -5,8 +5,6 @@ import { withRouter } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import axios from 'axios';
-
 import api from '../../services/api';
 
 import Pagination from '../../components/Pagination';
@@ -33,7 +31,7 @@ const Home = () => {
   const [nextPageUrl, setNextPageUrl] = useState();
   const [prevPageUrl, setPrevPageUrl] = useState();
   const [currentPageUrl, setCurrentPageUrl] = useState(
-    'https://pokeapi.co/api/v2/pokemon?offset=0&limit=20'
+    'pokemon?offset=0&limit=20'
   );
   const [pokemonListNames, setPokemonListNames] = useState([]);
 
@@ -47,7 +45,7 @@ const Home = () => {
   useEffect(() => {
     setLoading(true);
     const fetchAllPokemon = async () => {
-      await axios.get(currentPageUrl).then((response) => {
+      await api.get(currentPageUrl).then((response) => {
         setLoading(false);
         setNextPageUrl(response.data.next);
         setPrevPageUrl(response.data.previous);
@@ -72,7 +70,7 @@ const Home = () => {
   }
 
   // Função que executa a pesquisa Pokemon por nome ou id
-  const getPokemon = async (query) => {
+  const getPokemon = async (pokemon) => {
     setVisibleCard('flex');
     setVisibleListAll('none');
     setVisibleListType('none');
@@ -80,7 +78,7 @@ const Home = () => {
     setLoading(true);
 
     try{
-      await axios.get(`https://pokeapi.co/api/v2/pokemon/${query}/`)
+      await api.get(`pokemon/${pokemon}/`)
       .then((response) => {
         setPokemon(response.data)
       })

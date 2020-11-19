@@ -11,7 +11,7 @@ import {
 import { withRouter, useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 
-import { fetchPokemon } from '../../services/api';
+import api from '../../services/api';
 
 function PokemonListTypes(props) {
   const history = useHistory();
@@ -23,13 +23,15 @@ function PokemonListTypes(props) {
   useEffect(() => {
     pokemonListNamesByAbility.map((pokemon) => {
       const getPokemon = async (pokemon) => {
-        const response = await fetchPokemon(pokemon);
-        const results = await response.json();
-        setPokemonsList((pokemonsList) => [...pokemonsList, {
-            id: results.id,
-            name: results.name,
-          }]);
-      }
+        await api.get(`/pokemon/${pokemon}/`)
+        .then((response)=>{
+          const { data } = response;
+          setPokemonsList(pokemonsList => [...pokemonsList, {
+            id: data.id,
+            name: data.name
+          }])
+        })
+    }
       getPokemon(pokemon);
     })
     return setPokemonsList([]);
