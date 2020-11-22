@@ -84,7 +84,7 @@ const Details = (props) => {
           <div className={classes.mainDiv}>
             <div className={classes.cardDiv}>
               <Card className={classes.card}>
-                <div>
+                
                   <CardMedia
                     className={classes.media}
                     image={
@@ -122,11 +122,11 @@ const Details = (props) => {
                       ))}
                     </div>
                   </div>
-                </div>
+                
               </Card>
             </div>
 
-            <div className={classes.contenteDiv}>
+            <div className={classes.contentDiv}>
               <div className={classes.section}>
                 <div className={classes.informations}>
                   <div className={classes.types}>
@@ -221,7 +221,7 @@ const useStyles = makeStyles({
     alignItems: 'center',
     height: '100vh',
   },
-  contenteDiv: {
+  contentDiv: {
     display: 'flex',
     flexDirection: 'column',
     width: '50%',
@@ -236,6 +236,7 @@ const useStyles = makeStyles({
   },
   card: {
     width: 500,
+    boxShadow: '0 0 5px 2px #A9A9A9'
   },
   cardContainer: {
     display: 'flex',

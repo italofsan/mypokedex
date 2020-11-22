@@ -58,7 +58,7 @@ function PokemonListTypes(props) {
         }
 
         return (
-          <Card className={classes.root} key={i}>
+          <Card className={classes.card} key={i}>
             <CardActionArea 
             onClick={() => history.push({
               pathname: `/${pokemon.id}/details`, 
@@ -103,9 +103,13 @@ function PokemonListTypes(props) {
 }
 
 const useStyles = makeStyles({
-  root: {
+  card: {
     minWidth: 250,
     margin: 10,
+    transition: '.3s ease',
+    '&:hover': {
+      transform: 'scale(1.1)'
+    }
   },
   cardContainer: {
     display: 'flex',

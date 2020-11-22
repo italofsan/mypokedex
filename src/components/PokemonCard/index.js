@@ -93,7 +93,11 @@ const useStyles = makeStyles({
   },
   card: {
     width: 250,
-    display: 'inline-block'
+    display: 'inline-block',
+    transition: '.3s ease',
+    '&:hover': {
+      transform: 'scale(1.1)'
+    }
   },
   cardContainer: {
     display: 'flex',

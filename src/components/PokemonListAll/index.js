@@ -37,7 +37,7 @@ function PokemonListAll(props) {
         }
 
         return (
-          <Card className={classes.root} key={i}>
+          <Card className={classes.card} key={i}>
             <CardActionArea 
             onClick={() => history.push({
               pathname: `/${(i +offset)}/details`, 
@@ -82,9 +82,13 @@ function PokemonListAll(props) {
 }
 
 const useStyles = makeStyles({
-  root: {
+  card: {
     minWidth: 250,
     margin: 10,
+    transition: '.3s ease',
+    '&:hover': {
+      transform: 'scale(1.1)'
+    }
   },
   cardContainer: {
     display: 'flex',
