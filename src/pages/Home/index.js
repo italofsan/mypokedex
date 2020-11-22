@@ -7,6 +7,8 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import api from '../../services/api';
 
+import api from '../../services/api';
+
 import Pagination from '../../components/Pagination';
 import PokemonCard from '../../components/PokemonCard';
 import PokemonSearch from '../../components/PokemonSearch';
